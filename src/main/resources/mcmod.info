@@ -1,0 +1,16 @@
+[
+{
+  "modid": "runecraft",
+  "name": "Runecraft 0.1",
+  "description": "Runecraft description.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["TheKewlStore"],
+  "credits": "Forge developers for making this amazing development kit",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
