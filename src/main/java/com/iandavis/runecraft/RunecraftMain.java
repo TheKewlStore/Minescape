@@ -1,5 +1,6 @@
 package com.iandavis.runecraft;
 
+import com.iandavis.runecraft.proxy.CommonProxy;
 import com.iandavis.runecraft.proxy.Proxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -12,9 +13,14 @@ import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 @Mod(modid = RunecraftMain.MODID, name = RunecraftMain.NAME, version = RunecraftMain.VERSION)
 public class RunecraftMain
 {
-    static final String MODID = "runecraft";
-    static final String NAME = "Runecraft";
-    static final String VERSION = "0.1";
+    public static final String MODID = "runecraft";
+    public static final String NAME = "Runecraft";
+    public static final String VERSION = "0.1";
+
+    @SidedProxy(
+            clientSide="com.iandavis.runecraft.proxy.CommonProxy",
+            serverSide="com.iandavis.runecraft.proxy.CommonProxy")
+    private static CommonProxy commonProxy;
 
     @SidedProxy(
             clientSide="com.iandavis.runecraft.proxy.ClientProxy",
@@ -24,25 +30,28 @@ public class RunecraftMain
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        commonProxy.preInit(event);
         proxy.preInit(event);
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+        commonProxy.init(event);
         proxy.init(event);
     }
 
     @EventHandler
-    // postInit "Handle interaction with other mods, complete your setup based on this."
     public void postInit(FMLPostInitializationEvent event)
     {
+        commonProxy.postInit(event);
         proxy.postInit(event);
     }
 
     @EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
+        commonProxy.serverStarting(event);
         proxy.serverStarting(event);
     }
 }

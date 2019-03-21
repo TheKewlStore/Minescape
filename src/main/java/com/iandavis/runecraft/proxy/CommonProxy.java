@@ -1,26 +1,28 @@
 package com.iandavis.runecraft.proxy;
 
-import com.iandavis.runecraft.network.LevelUpMessage;
+import com.iandavis.runecraft.RunecraftMain;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import org.apache.logging.log4j.Logger;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
-public class ClientProxy implements Proxy {
-    private static Logger logger;
+public class CommonProxy implements Proxy {
+
+    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(RunecraftMain.MODID);
+    public static int MESSAGE_ID = 1;
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
 
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
-        LevelUpMessage.registerClientSide();
+
     }
 
     @Override
