@@ -17,15 +17,15 @@ prayer
 
 # Combat Stats
 Constitution stat
-- melee
--- sword
--- axe
-- ranged
--- bow
--- thrown
-- Magic
--- wand
--- staff
-- defense
--- armor
--- shield
+* melee
+  * sword
+  * axe
+* ranged
+  * bow
+  * thrown
+* Magic
+  * wand
+  * staff
+* Defense
+  * armor
+  * shield
