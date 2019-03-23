@@ -2,25 +2,25 @@ Runecraft is based off of the Minecraft Forge API.
 This project is still in very early development.
 
 # Proposed Skills
-* digging
-* mining
-* farming
-* fishing
-* woodcutting
-* athletics
+* Digging
+* Mining
+* Farming
+* Fishing
+* Woodcutting
+* Athletics
 * Dungeonnering
 * Herblore
-* crafting
-* smithing?
-* runecrafting
-* prayer
+* Crafting
+* Smithing?
+* Runecrafting
+* Prayer
 
 # Combat Stats
 Constitution stat
-* melee
+* Melee
   * sword
   * axe
-* ranged
+* Ranged
   * bow
   * thrown
 * Magic
