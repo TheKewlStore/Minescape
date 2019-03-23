@@ -3,6 +3,7 @@ package com.iandavis.runecraft.skills;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class SkillCapability implements ISkillCapability {
     private final Map<SkillEnum, Integer> skills;
 
@@ -45,6 +46,10 @@ public class SkillCapability implements ISkillCapability {
         skills.put(SkillEnum.Magic, 0);
         skills.put(SkillEnum.Mining, 0);
         skills.put(SkillEnum.Ranged, 0);
+    }
+
+    public SkillCapability(Map<SkillEnum, Integer> newSkills) {
+        skills = newSkills;
     }
 
     @Override

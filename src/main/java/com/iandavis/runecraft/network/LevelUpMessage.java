@@ -12,7 +12,6 @@ public class LevelUpMessage implements IMessage {
     private int skillNameLength;
     private SkillEnum skillName;
     private int newLevel;
-    private static final int MESSAGE_ID = CommonProxy.MESSAGE_ID++;
 
     public LevelUpMessage() {
 
@@ -40,11 +39,19 @@ public class LevelUpMessage implements IMessage {
     }
 
     public static void registerServerSide() {
-        CommonProxy.networkWrapper.registerMessage(((message, ctx) -> null), LevelUpMessage.class, MESSAGE_ID, Side.SERVER);
+        CommonProxy.networkWrapper.registerMessage((
+                (message, ctx) -> null),
+                LevelUpMessage.class,
+                MessageID.LevelUpMessage.ordinal(),
+                Side.SERVER);
     }
 
     public static void registerClientSide() {
-        CommonProxy.networkWrapper.registerMessage(LevelUpHandler.class, LevelUpMessage.class, MESSAGE_ID, Side.CLIENT);
+        CommonProxy.networkWrapper.registerMessage(
+                LevelUpHandler.class,
+                LevelUpMessage.class,
+                MessageID.LevelUpMessage.ordinal(),
+                Side.CLIENT);
     }
 
     SkillEnum getSkillName() {

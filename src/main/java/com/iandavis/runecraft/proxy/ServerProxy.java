@@ -1,5 +1,8 @@
 package com.iandavis.runecraft.proxy;
 
+import com.iandavis.runecraft.network.StatsRequestMessage;
+import com.iandavis.runecraft.network.StatsResponseHandler;
+import com.iandavis.runecraft.network.StatsResponseMessage;
 import com.iandavis.runecraft.skills.SkillEventHandler;
 import com.iandavis.runecraft.commands.CheckXPCommand;
 import com.iandavis.runecraft.network.LevelUpMessage;
@@ -19,20 +22,24 @@ import org.apache.logging.log4j.Logger;
 
 public class ServerProxy implements Proxy {
     private static Logger logger;
+
     private SkillStorage skillStorage;
 
     public ServerProxy() {
-        skillStorage = new SkillStorage(logger);
     }
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
+        skillStorage = new SkillStorage(logger);
     }
 
     @Override
     public void init(FMLInitializationEvent event) {
         LevelUpMessage.registerServerSide();
+        StatsResponseMessage.registerServerSide();
+        StatsRequestMessage.registerServerSide();
+
         CapabilityManager.INSTANCE.register(ISkillCapability.class, skillStorage, SkillCapability::new);
 
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler(logger));
