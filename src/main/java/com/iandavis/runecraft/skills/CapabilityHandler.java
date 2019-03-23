@@ -8,14 +8,13 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
 
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
+
 public class CapabilityHandler {
 
     private static final ResourceLocation SKILLS = new ResourceLocation(RunecraftMain.MODID);
 
-    private final Logger logger;
-
-    public CapabilityHandler(Logger logger) {
-        this.logger = logger;
+    public CapabilityHandler() {
     }
 
     @SubscribeEvent

@@ -3,7 +3,6 @@ package com.iandavis.runecraft.network;
 import com.iandavis.runecraft.proxy.CommonProxy;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import com.iandavis.runecraft.skills.SkillCapability;
-import com.iandavis.runecraft.skills.SkillEnum;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,13 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StatsResponseMessage implements IMessage {
-    private Map<SkillEnum, Integer> skills;
+    private Map<String, Integer> skills;
 
     public StatsResponseMessage() {
         skills = new HashMap<>();
     }
 
-    public StatsResponseMessage(Map<SkillEnum, Integer> newSkills) {
+    public StatsResponseMessage(Map<String, Integer> newSkills) {
         skills = newSkills;
     }
 
@@ -41,7 +40,7 @@ public class StatsResponseMessage implements IMessage {
 
     public ISkillCapability getSkillCapability() {
         ISkillCapability capability = new SkillCapability();
-        capability.setAllSkills(skills);
+        capability.setAllSkillXP(skills);
         return capability;
     }
 
@@ -49,26 +48,23 @@ public class StatsResponseMessage implements IMessage {
     public void fromBytes(ByteBuf buf) {
         int numberOfSkills = buf.readInt();
 
+        ISkillCapability skillCapability = new SkillCapability();
+
         for (int i=0; i < numberOfSkills; i++) {
             int lengthOfSkillName = buf.readInt();
-            SkillEnum skillName = SkillEnum.valueOf(
-                    buf.readCharSequence(lengthOfSkillName,
-                            Charset.defaultCharset()).toString());
-            Integer experience = buf.readInt();
-            skills.put(skillName, experience);
+            String skillName = buf.readCharSequence(lengthOfSkillName, Charset.defaultCharset()).toString();
+            int experience = buf.readInt();
+            skillCapability.setXP(skillName, experience);
         }
-
-        ISkillCapability skillCapability = new SkillCapability();
-        skillCapability.setAllSkills(skills);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(skills.size());
 
-        for (Map.Entry<SkillEnum, Integer> entry: skills.entrySet()) {
-            buf.writeInt(entry.getKey().name().length());
-            buf.writeCharSequence(entry.getKey().name(), Charset.defaultCharset());
+        for (Map.Entry<String, Integer> entry: skills.entrySet()) {
+            buf.writeInt(entry.getKey().length());
+            buf.writeCharSequence(entry.getKey(), Charset.defaultCharset());
             buf.writeInt(entry.getValue());
         }
     }

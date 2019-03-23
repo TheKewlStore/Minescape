@@ -4,19 +4,13 @@ import com.iandavis.runecraft.skills.ISkill;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class XPGainEvent extends Event {
+public class LevelUpEvent extends Event {
     private ISkill skill;
     private EntityPlayer player;
-    private int xpGained;
 
-    public XPGainEvent() {
-
-    }
-
-    public XPGainEvent(ISkill skill, EntityPlayer player, int xpGained) {
+    public LevelUpEvent(ISkill skill, EntityPlayer player) {
         this.skill = skill;
         this.player = player;
-        this.xpGained = xpGained;
     }
 
     public ISkill getSkill() {
@@ -25,9 +19,5 @@ public class XPGainEvent extends Event {
 
     public EntityPlayer getPlayer() {
         return player;
-    }
-
-    public int getXpGained() {
-        return xpGained;
     }
 }

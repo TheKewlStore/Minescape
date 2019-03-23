@@ -7,16 +7,15 @@ import net.minecraftforge.common.capabilities.Capability;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 public class SkillStorage implements Capability.IStorage<ISkillCapability> {
-
-    private final Logger logger;
-
-    public SkillStorage(Logger logger) {
-        this.logger = logger;
+    public SkillStorage() {
     }
 
     @Nullable
@@ -24,8 +23,8 @@ public class SkillStorage implements Capability.IStorage<ISkillCapability> {
     public NBTBase writeNBT(Capability<ISkillCapability> capability, ISkillCapability instance, EnumFacing side) {
         NBTTagCompound skillData = new NBTTagCompound();
 
-        for (Map.Entry<SkillEnum, Integer> entry: instance.getAllSkills().entrySet()) {
-            skillData.setInteger(entry.getKey().name(), entry.getValue());
+        for (Map.Entry<String, ISkill> entry : instance.getAllSkills().entrySet()) {
+            skillData.setInteger(entry.getKey(), entry.getValue().getXP());
         }
 
         return skillData;
@@ -38,20 +37,33 @@ public class SkillStorage implements Capability.IStorage<ISkillCapability> {
         }
 
         NBTTagCompound skillData = (NBTTagCompound) nbt;
-        Map<SkillEnum, Integer> skills = new HashMap<>();
+        Map<String, ISkill> skills = new HashMap<>();
 
-        for (String key: skillData.getKeySet()) {
-            SkillEnum skill;
+        for (String key : skillData.getKeySet()) {
+            ISkill skill;
 
             try {
-                skill = SkillEnum.valueOf(key);
-            } catch (IllegalArgumentException ex) {
-                logger.error(String.format("Failed to map skill named %s to SkillEnum!", key));
+                Class genericClass = Class.forName(key);
+                if (ISkill.class.isAssignableFrom(genericClass)) {
+                    skill = (ISkill) genericClass.getDeclaredConstructor().newInstance();
+                } else {
+                    logger.error(String.format("Skill class descriptor %s was not found to implement the ISkill interface", key));
+                    continue;
+                }
+            } catch (ClassNotFoundException e) {
+                logger.error("Failed to find skill class matching descriptor: " + key, e);
+                continue;
+            }  catch (NoSuchMethodException e) {
+                logger.error("No default constructor defined for skill class matching descriptor: " + key, e);
+                continue;
+            }  catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                logger.error("Exception occurred creating new instance of skill class matching descriptor: " + key, e);
                 continue;
             }
 
-            Integer value = skillData.getInteger(key);
-            skills.put(skill, value);
+            skill.setXP(skillData.getInteger(key));
+
+            skills.put(key, skill);
         }
 
         instance.setAllSkills(skills);

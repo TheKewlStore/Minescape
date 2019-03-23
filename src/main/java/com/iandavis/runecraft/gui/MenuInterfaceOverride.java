@@ -6,7 +6,6 @@ import com.iandavis.runecraft.network.StatsResponseHandler;
 import com.iandavis.runecraft.network.StatsResponseMessage;
 import com.iandavis.runecraft.proxy.CommonProxy;
 import com.iandavis.runecraft.skills.ISkillCapability;
-import com.iandavis.runecraft.skills.SkillEnum;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
@@ -96,23 +95,23 @@ public class MenuInterfaceOverride extends GuiInventory {
             return;
         }
 
-        for (Map.Entry<SkillEnum, Integer> entry: skillCapability.getAllSkills().entrySet()) {
+        for (Map.Entry<String, Integer> entry: skillCapability.getAllSkillXP().entrySet()) {
             drawSkillLevel(entry.getKey(), skillCapability.getLevel(entry.getKey()));
         }
     }
 
-    private Position getLevelPosition(SkillEnum skillName) {
+    private Position getLevelPosition(String skillName) {
         switch (skillName) {
-            case Digging:
+            case "Digging":
                 return new Position(this.guiLeft + 144.0f, this.guiTop + 6.0f);
-            case Attack:
+            case "Attack":
                 return new Position(this.guiLeft + 30.0f, this.guiTop + 6.0f);
                 default:
                     return new Position(this.guiLeft, this.guiTop);
         }
     }
 
-    private void drawSkillLevel(SkillEnum skillName, Integer level) {
+    private void drawSkillLevel(String skillName, Integer level) {
         Position position = getLevelPosition(skillName);
         Color color = new Color(255, 144, 76, 255);
 

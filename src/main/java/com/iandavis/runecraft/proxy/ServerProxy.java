@@ -1,15 +1,11 @@
 package com.iandavis.runecraft.proxy;
 
+import com.iandavis.runecraft.events.SkillEventHandler;
 import com.iandavis.runecraft.network.StatsRequestMessage;
-import com.iandavis.runecraft.network.StatsResponseHandler;
 import com.iandavis.runecraft.network.StatsResponseMessage;
-import com.iandavis.runecraft.skills.SkillEventHandler;
 import com.iandavis.runecraft.commands.CheckXPCommand;
 import com.iandavis.runecraft.network.LevelUpMessage;
-import com.iandavis.runecraft.skills.CapabilityHandler;
-import com.iandavis.runecraft.skills.ISkillCapability;
-import com.iandavis.runecraft.skills.SkillCapability;
-import com.iandavis.runecraft.skills.SkillStorage;
+import com.iandavis.runecraft.skills.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -18,11 +14,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import org.apache.logging.log4j.Logger;
 
 public class ServerProxy implements Proxy {
-    private static Logger logger;
-
     private SkillStorage skillStorage;
 
     public ServerProxy() {
@@ -30,8 +23,7 @@ public class ServerProxy implements Proxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
-        skillStorage = new SkillStorage(logger);
+        skillStorage = new SkillStorage();
     }
 
     @Override
@@ -40,10 +32,13 @@ public class ServerProxy implements Proxy {
         StatsResponseMessage.registerServerSide();
         StatsRequestMessage.registerServerSide();
 
+        SkillCapability.registerNewSkill(DiggingSkill.class);
+
         CapabilityManager.INSTANCE.register(ISkillCapability.class, skillStorage, SkillCapability::new);
 
-        MinecraftForge.EVENT_BUS.register(new CapabilityHandler(logger));
-        MinecraftForge.EVENT_BUS.register(new SkillEventHandler(logger));
+        MinecraftForge.EVENT_BUS.register(new CapabilityHandler());
+        MinecraftForge.EVENT_BUS.register(DiggingSkill.class);
+        MinecraftForge.EVENT_BUS.register(SkillEventHandler.class);
     }
 
     @Override

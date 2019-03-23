@@ -1,115 +1,99 @@
 package com.iandavis.runecraft.skills;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.minecraft.entity.player.EntityPlayer;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 public class SkillCapability implements ISkillCapability {
-    private final Map<SkillEnum, Integer> skills;
-
-    private final int[] xpLevels = new int[]{
-            0,
-            100,
-            225,
-            400,
-            675,
-            1025,
-            1385,
-            1795,
-            2345,
-            2987,
-            3545,
-            5690,
-            7835,
-            9980,
-            12125,
-            14270,
-            16415,
-            18560,
-            20705,
-            22850,
-            24995
-    };
+    private final static Set<Class<? extends ISkill>> skillClasses = new HashSet<>();
+    private final Map<String, ISkill> skills;
 
     public SkillCapability() {
         skills = new HashMap<>();
-        skills.put(SkillEnum.Agility, 0);
-        skills.put(SkillEnum.Attack, 0);
-        skills.put(SkillEnum.Alchemy, 0);
-        skills.put(SkillEnum.Constitution, 0);
-        skills.put(SkillEnum.Construction, 0);
-        skills.put(SkillEnum.Cooking, 0);
-        skills.put(SkillEnum.Defense, 0);
-        skills.put(SkillEnum.Digging, 0);
-        skills.put(SkillEnum.Farming, 0);
-        skills.put(SkillEnum.Fishing, 0);
-        skills.put(SkillEnum.Magic, 0);
-        skills.put(SkillEnum.Mining, 0);
-        skills.put(SkillEnum.Ranged, 0);
+
+        for (Class<? extends ISkill> skillClass: skillClasses) {
+            ISkill skill;
+
+            try {
+                skill = skillClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                logger.error("Failed to initialize skill instance from class descriptor: " + skillClass.getName(), e);
+                continue;
+            }
+
+            skills.put(skill.getName(), skill);
+        }
     }
 
-    public SkillCapability(Map<SkillEnum, Integer> newSkills) {
+    public SkillCapability(Map<String, ISkill> newSkills) {
         skills = newSkills;
     }
 
     @Override
-    public void setAllSkills(Map<SkillEnum, Integer> skills) {
+    public ISkill getSkill(String name) {
+        return this.skills.get(name);
+    }
+
+    @Override
+    public void setAllSkills(Map<String, ISkill> skills) {
         this.skills.putAll(skills);
     }
 
     @Override
-    public void setXP(SkillEnum skill, int xp) {
-        this.skills.put(skill, xp);
-    }
-
-    @Override
-    public boolean gainXP(SkillEnum skill, int amount) {
-        int xpToNextLevel = xpToNextLevel(skill);
-        this.skills.put(skill, this.skills.get(skill) + amount);
-
-        return amount >= xpToNextLevel;
-    }
-
-    @Override
-    public int getXP(SkillEnum skill) {
-        return this.skills.get(skill);
-    }
-
-    @Override
-    public int getLevel(SkillEnum skill) {
-        int currentXP = getXP(skill);
-
-        for (int level = 1; level < xpLevels.length; level++) {
-            if (xpLevels[level] > currentXP) {
-                return level;
-            }
-        }
-
-        return 1;
-    }
-
-    @Override
-    public int xpToNextLevel(SkillEnum skill) {
-        int currentLevel = getLevel(skill);
-
-        if (currentLevel >= (xpLevels.length - 1)) {
-            return 0;
-        } else {
-            return xpLevels[currentLevel] - getXP(skill);
+    public void setAllSkillXP(Map<String, Integer> skillXP) {
+        for (Map.Entry<String, Integer> entry: skillXP.entrySet()) {
+            setXP(entry.getKey(), entry.getValue());
         }
     }
 
     @Override
-    public float getDiggingSpeedModifier() {
-        if (getLevel(SkillEnum.Digging) >= 5) {
-            return 15.0f;
-        }
-
-        return 1.0f;
+    public void setXP(String skill, int xp) {
+        this.skills.get(skill).setXP(xp);
     }
 
     @Override
-    public Map<SkillEnum, Integer> getAllSkills() {
+    public void gainXP(String skill, int amount, EntityPlayer player) {
+        ISkill skillInstance = this.skills.get(skill);
+        skillInstance.gainXP(amount);
+    }
+
+    @Override
+    public int getXP(String skill) {
+        return this.skills.get(skill).getXP();
+    }
+
+    @Override
+    public int getLevel(String skill) {
+        return skills.get(skill).getLevel();
+    }
+
+    @Override
+    public int xpToNextLevel(String skill) {
+        return skills.get(skill).xpToNextLevel();
+    }
+
+    @Override
+    public Map<String, ISkill> getAllSkills() {
         return skills;
+    }
+
+    @Override
+    public Map<String, Integer> getAllSkillXP() {
+        Map<String, Integer> skillXP = new HashMap<>();
+
+        for (Map.Entry<String, ISkill> entry: skills.entrySet()) {
+            skillXP.put(entry.getKey(), entry.getValue().getXP());
+        }
+
+        return skillXP;
+    }
+
+    public static void registerNewSkill(Class<? extends ISkill> skillClass) {
+        skillClasses.add(skillClass);
     }
 }

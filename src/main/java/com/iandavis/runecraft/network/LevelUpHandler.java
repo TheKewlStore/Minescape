@@ -16,9 +16,10 @@ public class LevelUpHandler implements IMessageHandler<LevelUpMessage, IMessage>
     public IMessage onMessage(LevelUpMessage message, MessageContext ctx) {
         String displayMessage = String.format(
                 "Gained %s level! Current level is now: %d",
-                message.getSkillName().name(),
+                message.getSkillName(),
                 message.getNewLevel());
         ResourceLocation location = new ResourceLocation("minecraft", "entity.player.levelup");
+
         if (location != null) {
             SoundEvent event = new SoundEvent(location);
 

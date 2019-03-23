@@ -12,15 +12,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 
 public class CommonProxy implements Proxy {
-
-    private static Logger logger;
-
+    public static Logger logger;
     public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(RunecraftMain.MODID);
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
-
     }
 
     @Override

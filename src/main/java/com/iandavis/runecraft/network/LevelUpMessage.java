@@ -1,7 +1,7 @@
 package com.iandavis.runecraft.network;
 
 import com.iandavis.runecraft.proxy.CommonProxy;
-import com.iandavis.runecraft.skills.SkillEnum;
+import com.iandavis.runecraft.skills.ISkill;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
@@ -9,33 +9,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.nio.charset.Charset;
 
 public class LevelUpMessage implements IMessage {
-    private int skillNameLength;
-    private SkillEnum skillName;
-    private int newLevel;
+    private String skillName;
+    private int level;
 
     public LevelUpMessage() {
-
     }
 
-    public LevelUpMessage(SkillEnum skill, int level) {
-        skillNameLength = skill.name().length();
-        skillName = skill;
-        newLevel = level;
+    public LevelUpMessage(String newSkillName, int newLevel) {
+        skillName = newSkillName;
+        level = newLevel;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        skillNameLength = buf.readInt();
-        skillName = SkillEnum.valueOf(buf.readCharSequence(skillNameLength, Charset.defaultCharset()).toString());
-        newLevel = buf.readInt();
+        int skillNameLength = buf.readInt();
+        skillName = buf.readCharSequence(skillNameLength, Charset.defaultCharset()).toString();
+        level = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(skillNameLength);
-        buf.writeCharSequence(skillName.name(), Charset.defaultCharset());
-        buf.writeInt(newLevel);
-
+        buf.writeInt(skillName.length());
+        buf.writeCharSequence(skillName, Charset.defaultCharset());
+        buf.writeInt(level);
     }
 
     public static void registerServerSide() {
@@ -54,11 +50,11 @@ public class LevelUpMessage implements IMessage {
                 Side.CLIENT);
     }
 
-    SkillEnum getSkillName() {
+    String getSkillName() {
         return skillName;
     }
 
     int getNewLevel() {
-        return newLevel;
+        return level;
     }
 }
