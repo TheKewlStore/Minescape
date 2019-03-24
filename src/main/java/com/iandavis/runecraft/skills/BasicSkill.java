@@ -4,6 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
+/**
+ * Simple Implementation of the ISkill interface which provides all the basic functionality required.
+ * For an example of a complete skill based off of this implementation, view the DiggingSkill class.
+ */
 public abstract class BasicSkill implements ISkill {
     protected int currentXP;
 
@@ -33,10 +37,6 @@ public abstract class BasicSkill implements ISkill {
 
     public BasicSkill() {
         this.currentXP = 0;
-    }
-
-    public BasicSkill(int currentXP) {
-        this.currentXP = currentXP;
     }
 
     @Override

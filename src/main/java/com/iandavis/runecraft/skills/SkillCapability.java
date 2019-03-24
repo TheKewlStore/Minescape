@@ -1,7 +1,5 @@
 package com.iandavis.runecraft.skills;
 
-import net.minecraft.entity.player.EntityPlayer;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,10 +28,6 @@ public class SkillCapability implements ISkillCapability {
         }
     }
 
-    public SkillCapability(Map<String, ISkill> newSkills) {
-        skills = newSkills;
-    }
-
     @Override
     public ISkill getSkill(String name) {
         return this.skills.get(name);
@@ -57,7 +51,7 @@ public class SkillCapability implements ISkillCapability {
     }
 
     @Override
-    public void gainXP(String skill, int amount, EntityPlayer player) {
+    public void gainXP(String skill, int amount) {
         ISkill skillInstance = this.skills.get(skill);
         skillInstance.gainXP(amount);
     }
@@ -93,6 +87,10 @@ public class SkillCapability implements ISkillCapability {
         return skillXP;
     }
 
+    /**
+     * Static registration method used to register a new skill instance with the skill system.
+     * @param skillClass the class of the skill instances to create.
+     */
     public static void registerNewSkill(Class<? extends ISkill> skillClass) {
         skillClasses.add(skillClass);
     }

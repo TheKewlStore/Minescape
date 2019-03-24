@@ -18,18 +18,18 @@ import java.util.Map;
 
 public class MenuInterfaceOverride extends GuiInventory {
     private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(RunecraftMain.MODID, "textures/gui/skills.png");
-    private final int SKILLS_BUTTON_ID = 1;
     private GuiButton skillsButton;
     private boolean skillsTabActive = false;
     private ISkillCapability skillCapability = null;
 
-    private float oldMouseX;
-    private float oldMouseY;
+    private enum ButtonIDs {
+        SkillsButton
+    }
 
     public MenuInterfaceOverride(EntityPlayer player) {
         super(player);
         skillsButton = new GuiButton(
-                SKILLS_BUTTON_ID,
+                ButtonIDs.SkillsButton.ordinal(),
                 this.guiLeft + 175,
                 this.height / 2 - 46,
                 50,
@@ -66,9 +66,6 @@ public class MenuInterfaceOverride extends GuiInventory {
             skillsButton.displayString = "Skills";
             super.drawScreen(mouseX, mouseY, partialTicks);
         }
-
-        this.oldMouseX = (float)mouseX;
-        this.oldMouseY = (float)mouseY;
     }
 
     private void drawSkillsScreen(int mouseX, int mouseY, float partialTicks) {
