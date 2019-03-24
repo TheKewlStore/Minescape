@@ -1,11 +1,14 @@
 package com.iandavis.runecraft.skills;
 
+import com.iandavis.runecraft.RunecraftMain;
 import com.iandavis.runecraft.events.LevelUpEvent;
 import com.iandavis.runecraft.events.XPGainEvent;
+import com.iandavis.runecraft.gui.Position;
 import com.iandavis.runecraft.network.LevelUpMessage;
 import com.iandavis.runecraft.proxy.CommonProxy;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -25,6 +28,16 @@ public class DiggingSkill extends BasicSkill {
         } else {
             return 1.0f;
         }
+    }
+
+    @Override
+    public ResourceLocation getSkillIcon() {
+        return new ResourceLocation(RunecraftMain.MODID, "textures/gui/digging.png");
+    }
+
+    @Override
+    public Position getIconTextureLocation() {
+        return new Position(0, 0);
     }
 
     @SubscribeEvent

@@ -32,8 +32,6 @@ public class ServerProxy implements Proxy {
         StatsResponseMessage.registerServerSide();
         StatsRequestMessage.registerServerSide();
 
-        SkillCapability.registerNewSkill(DiggingSkill.class);
-
         CapabilityManager.INSTANCE.register(ISkillCapability.class, skillStorage, SkillCapability::new);
 
         MinecraftForge.EVENT_BUS.register(new CapabilityHandler());

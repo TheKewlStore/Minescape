@@ -5,8 +5,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.nio.charset.Charset;
-
 public class StatsRequestMessage implements IMessage {
     public static void registerServerSide() {
         CommonProxy.networkWrapper.registerMessage(
@@ -26,11 +24,9 @@ public class StatsRequestMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        String requestString = buf.readCharSequence("getPlayerStats".length(), Charset.defaultCharset()).toString();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeCharSequence("getPlayerStats", Charset.defaultCharset());
     }
 }

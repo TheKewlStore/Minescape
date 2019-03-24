@@ -1,6 +1,11 @@
 package com.iandavis.runecraft.skills;
 
+import com.iandavis.runecraft.gui.MenuInterfaceOverride;
+import com.iandavis.runecraft.gui.Position;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
@@ -76,6 +81,28 @@ public abstract class BasicSkill implements ISkill {
         }
 
         return 1;
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound data = new NBTTagCompound();
+        data.setInteger("xp", currentXP);
+        return data;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound data) {
+        currentXP = data.getInteger("xp");
+    }
+
+    @Override
+    public void serializePacket(ByteBuf buf) {
+        buf.writeInt(this.getXP());
+    }
+
+    @Override
+    public void deserializePacket(ByteBuf buf) {
+        currentXP = buf.readInt();
     }
 
     public static ISkillCapability getCapabilityFromPlayer(EntityPlayer player) {

@@ -25,6 +25,6 @@ public class CheckXPCommand extends CommandBase {
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) {
         ISkillCapability skillCapability = (sender.getCommandSenderEntity()).getCapability(SkillCapabilityProvider.skill, null);
-        sender.getCommandSenderEntity().sendMessage(new TextComponentString(String.valueOf(skillCapability.getXP(args[0]))));
+        sender.getCommandSenderEntity().sendMessage(new TextComponentString(String.valueOf(skillCapability.getSkill(args[0]).getXP())));
     }
 }

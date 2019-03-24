@@ -5,6 +5,7 @@ import com.iandavis.runecraft.network.StatsRequestMessage;
 import com.iandavis.runecraft.network.StatsResponseHandler;
 import com.iandavis.runecraft.network.StatsResponseMessage;
 import com.iandavis.runecraft.proxy.CommonProxy;
+import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -14,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class MenuInterfaceOverride extends GuiInventory {
     private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(RunecraftMain.MODID, "textures/gui/skills.png");
@@ -30,7 +30,7 @@ public class MenuInterfaceOverride extends GuiInventory {
         super(player);
         skillsButton = new GuiButton(
                 ButtonIDs.SkillsButton.ordinal(),
-                this.guiLeft + 175,
+                this.guiLeft + 125,
                 this.height / 2 - 46,
                 50,
                 20,
@@ -46,7 +46,7 @@ public class MenuInterfaceOverride extends GuiInventory {
     public void initGui() {
         super.initGui();
 
-        skillsButton.x = this.guiLeft + 175;
+        skillsButton.x = this.guiLeft + 125;
         skillsButton.y = this.guiTop;
         skillsButton.width = 50;
         skillsButton.height = 20;
@@ -92,32 +92,58 @@ public class MenuInterfaceOverride extends GuiInventory {
             return;
         }
 
-        for (Map.Entry<String, Integer> entry: skillCapability.getAllSkillXP().entrySet()) {
-            drawSkillLevel(entry.getKey(), skillCapability.getLevel(entry.getKey()));
+        int skillIndex = 1;
+
+        for (String skillName: skillCapability.getAllSkillXP().keySet()) {
+            drawSkill(skillIndex++, skillCapability.getSkill(skillName));
         }
     }
 
-    private Position getLevelPosition(String skillName) {
-        switch (skillName) {
-            case "Digging":
-                return new Position(this.guiLeft + 144.0f, this.guiTop + 6.0f);
-            case "Attack":
-                return new Position(this.guiLeft + 30.0f, this.guiTop + 6.0f);
-                default:
-                    return new Position(this.guiLeft, this.guiTop);
-        }
-    }
+    private void drawSkill(int skillIndex, ISkill skill) {
+        Position levelPosition = getLevelPosition(skillIndex);
+        Position iconPosition = getIconPosition(skillIndex);
 
-    private void drawSkillLevel(String skillName, Integer level) {
-        Position position = getLevelPosition(skillName);
+        ResourceLocation skillIcon = skill.getSkillIcon();
+
+        mc.getTextureManager().bindTexture(skillIcon);
+        drawModalRectWithCustomSizedTexture(
+                (int) iconPosition.getX(),
+                (int) iconPosition.getY(),
+                0.0f,
+                0.0f,
+                12,
+                12,
+                12,
+                12);
+
         Color color = new Color(255, 144, 76, 255);
 
         this.mc.fontRenderer.drawString(
-                String.valueOf(level),
-                position.getX(),
-                position.getY(),
+                String.valueOf(skill.getLevel()),
+                levelPosition.getX(),
+                levelPosition.getY(),
                 color.getIntValue(),
                 false);
+    }
+
+    private Position getIconPosition(int skillIndex) {
+        Position position = getLevelPosition(skillIndex);
+        position.setX(position.getX() - 25);
+        position.setY(position.getY() - 2);
+        return position;
+    }
+
+    private Position getLevelPosition(int skillIndex) {
+        int row = (skillIndex / 3) + 1;
+        int column = skillIndex % 3;
+        int left = (column - 1) * 58;
+        int right = column * 58;
+        int columnOffset = (int) ((right - left) / 2.0f) + left;
+
+        float x = this.guiLeft + columnOffset;
+        float y = this.guiTop + (6.0f * row);
+
+        return new Position(x, y);
     }
 
     private void loadSkillCapability(StatsResponseMessage message, MessageContext context) {

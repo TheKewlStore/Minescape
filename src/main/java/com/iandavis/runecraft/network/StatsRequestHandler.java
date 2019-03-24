@@ -9,6 +9,6 @@ public class StatsRequestHandler implements IMessageHandler<StatsRequestMessage,
     @Override
     public StatsResponseMessage onMessage(StatsRequestMessage message, MessageContext ctx) {
         ISkillCapability skillCapability = ctx.getServerHandler().player.getCapability(SkillCapabilityProvider.skill, null);
-        return new StatsResponseMessage(skillCapability.getAllSkillXP());
+        return new StatsResponseMessage(skillCapability);
     }
 }

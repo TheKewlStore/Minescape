@@ -9,6 +9,14 @@ public class Position {
         y = newY;
     }
 
+    public void setX(float newX) {
+        x = newX;
+    }
+
+    public void setY(float newY) {
+        y = newY;
+    }
+
     public float getX() {
         return x;
     }

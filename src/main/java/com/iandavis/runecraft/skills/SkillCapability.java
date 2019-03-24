@@ -1,5 +1,8 @@
 package com.iandavis.runecraft.skills;
 
+import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,41 +37,25 @@ public class SkillCapability implements ISkillCapability {
     }
 
     @Override
-    public void setAllSkills(Map<String, ISkill> skills) {
-        this.skills.putAll(skills);
-    }
+    public void serializePacket(ByteBuf buf) {
+        buf.writeInt(skills.size());
 
-    @Override
-    public void setAllSkillXP(Map<String, Integer> skillXP) {
-        for (Map.Entry<String, Integer> entry: skillXP.entrySet()) {
-            setXP(entry.getKey(), entry.getValue());
+        for (ISkill skill: skills.values()) {
+            buf.writeInt(skill.getName().length());
+            buf.writeCharSequence(skill.getName(), Charset.defaultCharset());
+            skill.serializePacket(buf);
         }
     }
 
     @Override
-    public void setXP(String skill, int xp) {
-        this.skills.get(skill).setXP(xp);
-    }
+    public void deserializePacket(ByteBuf buf) {
+        int numberOfSkills = buf.readInt();
 
-    @Override
-    public void gainXP(String skill, int amount) {
-        ISkill skillInstance = this.skills.get(skill);
-        skillInstance.gainXP(amount);
-    }
-
-    @Override
-    public int getXP(String skill) {
-        return this.skills.get(skill).getXP();
-    }
-
-    @Override
-    public int getLevel(String skill) {
-        return skills.get(skill).getLevel();
-    }
-
-    @Override
-    public int xpToNextLevel(String skill) {
-        return skills.get(skill).xpToNextLevel();
+        for (int i=0; i < numberOfSkills; i++) {
+            int lengthOfSkillName = buf.readInt();
+            String skillName = buf.readCharSequence(lengthOfSkillName, Charset.defaultCharset()).toString();
+            getSkill(skillName).deserializePacket(buf);
+        }
     }
 
     @Override

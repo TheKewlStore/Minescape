@@ -1,6 +1,8 @@
 package com.iandavis.runecraft.proxy;
 
 import com.iandavis.runecraft.RunecraftMain;
+import com.iandavis.runecraft.skills.DiggingSkill;
+import com.iandavis.runecraft.skills.SkillCapability;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -22,6 +24,7 @@ public class CommonProxy implements Proxy {
 
     @Override
     public void init(FMLInitializationEvent event) {
+        SkillCapability.registerNewSkill(DiggingSkill.class);
 
     }
 

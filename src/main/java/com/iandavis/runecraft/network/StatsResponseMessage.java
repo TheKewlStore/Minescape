@@ -7,19 +7,15 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-
 public class StatsResponseMessage implements IMessage {
-    private Map<String, Integer> skills;
+    private ISkillCapability capability;
 
     public StatsResponseMessage() {
-        skills = new HashMap<>();
+        capability = new SkillCapability();
     }
 
-    public StatsResponseMessage(Map<String, Integer> newSkills) {
-        skills = newSkills;
+    public StatsResponseMessage(ISkillCapability capability) {
+        this.capability = capability;
     }
 
     public static void registerServerSide() {
@@ -39,33 +35,17 @@ public class StatsResponseMessage implements IMessage {
     }
 
     public ISkillCapability getSkillCapability() {
-        ISkillCapability capability = new SkillCapability();
-        capability.setAllSkillXP(skills);
         return capability;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        int numberOfSkills = buf.readInt();
+        capability.deserializePacket(buf);
 
-        ISkillCapability skillCapability = new SkillCapability();
-
-        for (int i=0; i < numberOfSkills; i++) {
-            int lengthOfSkillName = buf.readInt();
-            String skillName = buf.readCharSequence(lengthOfSkillName, Charset.defaultCharset()).toString();
-            int experience = buf.readInt();
-            skillCapability.setXP(skillName, experience);
-        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(skills.size());
-
-        for (Map.Entry<String, Integer> entry: skills.entrySet()) {
-            buf.writeInt(entry.getKey().length());
-            buf.writeCharSequence(entry.getKey(), Charset.defaultCharset());
-            buf.writeInt(entry.getValue());
-        }
+        capability.serializePacket(buf);
     }
 }
