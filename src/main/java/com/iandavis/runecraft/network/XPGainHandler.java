@@ -7,7 +7,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class XPGainHandler implements IMessageHandler<XPGainMessage, IMessage> {
     @Override
     public IMessage onMessage(XPGainMessage message, MessageContext ctx) {
-
         return null;
     }
 }

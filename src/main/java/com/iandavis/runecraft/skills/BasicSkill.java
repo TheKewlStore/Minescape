@@ -1,13 +1,12 @@
 package com.iandavis.runecraft.skills;
 
-import com.iandavis.runecraft.gui.MenuInterfaceOverride;
-import com.iandavis.runecraft.gui.Position;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
+
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 /**
  * Simple Implementation of the ISkill interface which provides all the basic functionality required.
@@ -17,27 +16,16 @@ public abstract class BasicSkill implements ISkill {
     protected int currentXP;
 
     private final int[] xpLevels = new int[]{
-            0,
-            100,
-            225,
-            400,
-            675,
-            1025,
-            1385,
-            1795,
-            2345,
-            2987,
-            3545,
-            5690,
-            7835,
-            9980,
-            12125,
-            14270,
-            16415,
-            18560,
-            20705,
-            22850,
-            24995
+            0, 100, 225, 400, 675, 1025, 1385, 1795, 2345, 2987, // 10
+            3545, 5690, 7835, 9980, 12125, 14270, 16415, 18560, 20705, 22850, // 20
+            24995, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 32000, 33000, 34000, // 30
+            35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, // 40
+            46000, 47000, 48000, 49000, 50000, 51000, 52000, 53000, 54000, 55000, 56000, // 50
+            57000, 58000, 59000, 60000, 61000, 62000, 63000, 64000, 65000, 66000, 67000, // 60
+            68000, 69000, 70000, 71000, 72000, 73000, 74000, 75000, 76000, 77000, 78000, // 70
+            79000, 80000, 81000, 82000, 83000, 84000, 85000, 86000, 87000, 88000, 89000, // 80
+            90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, // 90
+            90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000
     };
 
     public BasicSkill() {
@@ -67,7 +55,7 @@ public abstract class BasicSkill implements ISkill {
             }
         }
 
-        return 1;
+        return 99;
     }
 
     @Override
@@ -76,11 +64,23 @@ public abstract class BasicSkill implements ISkill {
 
         for (int level = 1; level < xpLevels.length; level++) {
             if (xpLevels[level] > currentXP) {
-                return level;
+                logger.info("XP Required for level: " + String.valueOf(level + 1) + " - " + String.valueOf(xpLevels[level] - currentXP));
+                return xpLevels[level] - currentXP;
             }
         }
 
-        return 1;
+        return 0;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 99;
+    }
+
+    @Override
+    public void setLevel(int newLevel) {
+        currentXP = xpLevels[newLevel - 1];
+        logger.info(String.format("Setting xp for %s to %d", getName(), xpLevels[newLevel - 1]));
     }
 
     @Override

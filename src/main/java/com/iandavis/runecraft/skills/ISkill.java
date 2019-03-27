@@ -42,6 +42,13 @@ public interface ISkill {
      */
     int getLevel();
 
+
+    int getMaxLevel();
+
+
+    void setLevel(int newLevel);
+
+
     /**
      *
      * @return The experience required to get to the next level.
@@ -77,7 +84,5 @@ public interface ISkill {
      */
     void deserializePacket(ByteBuf buf);
 
-    ResourceLocation getSkillIcon();
-
-    Position getIconTextureLocation();
+    SkillIcon getSkillIcon();
 }

@@ -7,7 +7,9 @@ import com.iandavis.runecraft.network.StatsResponseMessage;
 import com.iandavis.runecraft.proxy.CommonProxy;
 import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
+import com.iandavis.runecraft.skills.SkillIcon;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,13 +30,6 @@ public class MenuInterfaceOverride extends GuiInventory {
 
     public MenuInterfaceOverride(EntityPlayer player) {
         super(player);
-        skillsButton = new GuiButton(
-                ButtonIDs.SkillsButton.ordinal(),
-                this.guiLeft + 125,
-                this.height / 2 - 46,
-                50,
-                20,
-                "Skills");
     }
 
     @Override
@@ -46,10 +41,16 @@ public class MenuInterfaceOverride extends GuiInventory {
     public void initGui() {
         super.initGui();
 
-        skillsButton.x = this.guiLeft + 125;
-        skillsButton.y = this.guiTop;
-        skillsButton.width = 50;
-        skillsButton.height = 20;
+        skillsButton = new GuiButtonImage(
+                ButtonIDs.SkillsButton.ordinal(),
+                this.guiLeft + 155,
+                this.guiTop + 3,
+                14, // width
+                12, // height
+                1, // tex x
+                168, // tex y
+                0, // hover tex y
+                new ResourceLocation(RunecraftMain.MODID, "textures/gui/skills.png"));
 
         this.buttonList.add(skillsButton);
 
@@ -70,7 +71,7 @@ public class MenuInterfaceOverride extends GuiInventory {
 
     private void drawSkillsScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
-        skillsButton.drawButton(this.mc, mouseX, mouseY, partialTicks);
+        GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(SKILLS_TEXTURE);
         super.drawTexturedModalRect(
@@ -78,8 +79,8 @@ public class MenuInterfaceOverride extends GuiInventory {
                 this.guiTop,
                 0,
                 0,
-                175,
-                164);
+                176,
+                166);
 
         Color color = new Color(255, 144, 76, 255);
 
@@ -97,38 +98,54 @@ public class MenuInterfaceOverride extends GuiInventory {
         for (String skillName: skillCapability.getAllSkillXP().keySet()) {
             drawSkill(skillIndex++, skillCapability.getSkill(skillName));
         }
+
+        skillsButton.drawButton(this.mc, mouseX, mouseY, partialTicks);
+
+        GlStateManager.popMatrix();
     }
 
     private void drawSkill(int skillIndex, ISkill skill) {
         Position levelPosition = getLevelPosition(skillIndex);
         Position iconPosition = getIconPosition(skillIndex);
+        SkillIcon skillIcon = skill.getSkillIcon();
 
-        ResourceLocation skillIcon = skill.getSkillIcon();
+        GlStateManager.pushMatrix();
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        mc.getTextureManager().bindTexture(skillIcon);
-        drawModalRectWithCustomSizedTexture(
+        mc.getTextureManager().bindTexture(skillIcon.getTextureLocation());
+        drawScaledCustomSizeModalRect(
                 (int) iconPosition.getX(),
                 (int) iconPosition.getY(),
                 0.0f,
                 0.0f,
+                skillIcon.getTexWidth(),
+                skillIcon.getTexHeight(),
                 12,
                 12,
-                12,
-                12);
+                skillIcon.getTexWidth(),
+                skillIcon.getTexHeight());
 
-        Color color = new Color(255, 144, 76, 255);
+        Color color = new Color(255, 255, 255, 255);
 
-        this.mc.fontRenderer.drawString(
+        mc.fontRenderer.drawString(
                 String.valueOf(skill.getLevel()),
                 levelPosition.getX(),
                 levelPosition.getY(),
                 color.getIntValue(),
-                false);
+                true);
+        mc.fontRenderer.drawString(
+                "99",
+                levelPosition.getX() + 20,
+                levelPosition.getY(),
+                color.getIntValue(),
+                true);
+
+        GlStateManager.popMatrix();
     }
 
     private Position getIconPosition(int skillIndex) {
         Position position = getLevelPosition(skillIndex);
-        position.setX(position.getX() - 25);
+        position.setX(position.getX() - 20);
         position.setY(position.getY() - 2);
         return position;
     }
@@ -136,12 +153,12 @@ public class MenuInterfaceOverride extends GuiInventory {
     private Position getLevelPosition(int skillIndex) {
         int row = (skillIndex / 3) + 1;
         int column = skillIndex % 3;
-        int left = (column - 1) * 58;
-        int right = column * 58;
+        int left = (column - 1) * 53;
+        int right = column * 53;
         int columnOffset = (int) ((right - left) / 2.0f) + left;
 
-        float x = this.guiLeft + columnOffset;
-        float y = this.guiTop + (6.0f * row);
+        float x = this.guiLeft + 2 + columnOffset;
+        float y = this.guiTop + 17 + (3.0f * row);
 
         return new Position(x, y);
     }
@@ -162,5 +179,17 @@ public class MenuInterfaceOverride extends GuiInventory {
         }
 
         skillsTabActive = !skillsTabActive;
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if (skillsTabActive &&
+                mouseX > this.guiLeft + 7 &&
+                mouseX < this.guiLeft + 167 &&
+                mouseY > this.guiTop + 17 &&
+                mouseY < this.guiTop + 121) {
+        } else {
+            super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
     }
 }

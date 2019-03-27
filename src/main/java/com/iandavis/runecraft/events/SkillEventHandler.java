@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class SkillEventHandler {
     @SubscribeEvent
-    public  static void onXPGain(XPGainEvent event) {
+    public static void onXPGain(XPGainEvent event) {
         CommonProxy.networkWrapper.sendTo(
                 new XPGainMessage(event.getSkill().getName(), event.getXpGained()),
                 (EntityPlayerMP) event.getPlayer());

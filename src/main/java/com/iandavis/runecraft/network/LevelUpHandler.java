@@ -14,21 +14,19 @@ public class LevelUpHandler implements IMessageHandler<LevelUpMessage, IMessage>
 
     @Override
     public IMessage onMessage(LevelUpMessage message, MessageContext ctx) {
-        String displayMessage = String.format(
-                "Gained %s level! Current level is now: %d",
-                message.getSkillName(),
+        String title = String.format(
+                "Gained %s level!",
+                message.getSkillName());
+        String body = String.format(
+                "Current level: %d",
                 message.getNewLevel());
         ResourceLocation location = new ResourceLocation("minecraft", "entity.player.levelup");
 
-        if (location != null) {
-            SoundEvent event = new SoundEvent(location);
+        Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().player.playSound(
+                new SoundEvent(location), 100, 100));
+        Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().getToastGui().add(
+                new SimpleToastInterface(title, body)));
 
-            if (event != null) {
-                Minecraft.getMinecraft().player.playSound(new SoundEvent(location), 100, 100);
-            }
-        }
-
-        Minecraft.getMinecraft().getToastGui().add(new SimpleToastInterface(displayMessage));
         return null;
     }
 }

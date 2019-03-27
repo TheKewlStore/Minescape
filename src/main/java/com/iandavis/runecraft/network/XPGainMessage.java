@@ -8,9 +8,12 @@ import net.minecraftforge.fml.relauncher.Side;
 import java.nio.charset.Charset;
 
 public class XPGainMessage implements IMessage {
-
     private String skillName;
     private int xpGained;
+
+    public XPGainMessage() {
+
+    }
 
     public XPGainMessage(String newSkillName, int newXpGained) {
         skillName = newSkillName;

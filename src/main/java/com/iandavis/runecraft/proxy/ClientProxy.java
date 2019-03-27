@@ -4,7 +4,9 @@ import com.iandavis.runecraft.gui.MenuInterfaceOverride;
 import com.iandavis.runecraft.network.LevelUpMessage;
 import com.iandavis.runecraft.network.StatsRequestMessage;
 import com.iandavis.runecraft.network.StatsResponseMessage;
+import com.iandavis.runecraft.network.XPGainMessage;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -29,6 +31,7 @@ public class ClientProxy implements Proxy {
     @Override
     public void init(FMLInitializationEvent event) {
         LevelUpMessage.registerClientSide();
+        XPGainMessage.registerClientSide();
         StatsRequestMessage.registerClientSide();
         StatsResponseMessage.registerClientSide();
 
@@ -62,6 +65,8 @@ public class ClientProxy implements Proxy {
             }
 
             event.setGui(new MenuInterfaceOverride(Minecraft.getMinecraft().player));
+        } else if (event.getGui() instanceof GuiContainerCreative) {
+
         }
     }
 }
