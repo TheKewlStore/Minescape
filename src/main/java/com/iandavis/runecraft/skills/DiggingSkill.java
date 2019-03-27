@@ -40,7 +40,7 @@ public class DiggingSkill extends BasicSkill {
     }
 
     private float getDiggingSpeedModifier() {
-        if (getLevel() > 99) {
+        if (getLevel() >= 99) {
             return 9.0f;
         } else if (getLevel() > 90) {
             return 8.5f;
