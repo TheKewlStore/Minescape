@@ -206,6 +206,22 @@ Firstly, a general overview of all the mechanics that Minecraft/Forge uses to de
              12, // The scaled height to draw it as on the screen.
              skillIcon.getTexWidth(), // These are called tileWidth and height, not sure what this means.
              skillIcon.getTexHeight()); // ^
+
+### String Colors
+Another gotcha that has no documentation that I could find was how to specify colors for the drawString and 
+drawCenteredString functions. Each of these functions take a single parameter, an int, for the color value.
+
+This value works like a standard bit flag, specifying red, green, blue and alpha values each using 8 of the 32 bits.
+
+Alpha is the highest order 8 bits, followed by red, green, then finally blue as the lowest order bits.
+
+This equates to the following, given 4 ints alpha, red, green and blue specified out of 255 as the max:
+
+    int colorParam = alpha << 24 | red << 16 | green << 8 | blue;
+
+The solution to getting values for each color and alpha value, then, is to use bit shifts combined with logical OR.
+See the Color class in the gui package for an example on how to generate a proper value for the color you want.
+ 
  
  ### Vanilla Textures
  Another thing that could stand to be better explained in the documentation is accessing default minecraft resources.
