@@ -16,7 +16,7 @@ public class XPGainHandler implements IMessageHandler<XPGainMessage, IMessage> {
         }
 
         ISkillCapability skillCapability = ClientProxy.getSkillCapability();
-        skillCapability.getSkill(message.getSkillName()).setXP(message.getXpGained());
+        skillCapability.getSkill(message.getSkillName()).gainXP(message.getXpGained());
 
         return null;
     }

@@ -23,14 +23,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
 
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
+
 public class ClientProxy implements Proxy {
-    private static Logger logger;
     private static ISkillCapability skillCapability = null;
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
-
     }
 
     @Override

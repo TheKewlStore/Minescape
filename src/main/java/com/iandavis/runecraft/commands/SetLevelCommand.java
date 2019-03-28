@@ -1,13 +1,17 @@
 package com.iandavis.runecraft.commands;
 
+import com.iandavis.runecraft.events.LevelUpEvent;
 import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import com.iandavis.runecraft.skills.SkillCapabilityProvider;
 import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.MinecraftForge;
+
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 public class SetLevelCommand extends CommandBase {
     @Override
@@ -39,6 +43,13 @@ public class SetLevelCommand extends CommandBase {
                     new TextComponentString(
                             String.format(
                                     "Set level in %s to %d", args[0], newLevel)));
+
+            try {
+                LevelUpEvent levelUpEvent = new LevelUpEvent(skillCapability.getSkill(args[0]), getCommandSenderAsPlayer(sender));
+                MinecraftForge.EVENT_BUS.post(levelUpEvent);
+            } catch (PlayerNotFoundException e) {
+                logger.error("Failed to find player attached to sender entity: " + sender.getName(), e);
+            }
         }
     }
 }
