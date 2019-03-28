@@ -65,8 +65,14 @@ Firstly, a general overview of all the mechanics that Minecraft/Forge uses to de
  It appears that when the block is initially broken, the event is fired on the server, after which point
  it is fired successively for each swing on the client side until the block is determined broken at which point
  that event will be sent back to the server for processing.
+ This fact means that you effectively need to register an event handler for the 
+ BreakSpeed event on both servers and clients, which will unfortunately add complexity 
+ as clients will need to be fed any and all information required for you to modify the speed sent to them via packets.
+ I will likely include a section in here on best practices and extra considerations for Client/Server duality.
  
  # TODO
  - Add in explanation of how to draw textures of vanilla items (specifically to a GUI)
  - Add in explanation of issue with texture scaling.
+ - Add in best practices for packet transfer.
+ - Add in issues with Sidedness and the proxy fixture recommended in the Forge documentation.
  
