@@ -26,7 +26,7 @@ but again leaves something to be desired in the area of how to handle this archi
 Using the SidedProxy annotation to create handlers for the client and server side is nice, but can easily
 cause incompatibilities for single-player vs multi-player games. This problem arises from the difference of 
 PHYSICAL and LOGICAL servers. The SidedProxy annotation, as stated in the docs, only separates based on the PHYSICAL
-side, but in a singe-player game, there is only the CLIENT PHYSICAL side. This means that in a single-player world,
+side, but in a single-player game, there is only the CLIENT PHYSICAL side. This means that in a single-player world,
 a Proxy handler annotated with Side.SERVER will never be created/called. This leaves a big hole in the documented way
 to handle client/server communication.
 
@@ -138,8 +138,6 @@ Firstly, a general overview of all the mechanics that Minecraft/Forge uses to de
  actual break speed if you set the break speed high enough to break the block instantly.
  This is where the understanding that the break speed is only fired once on 
  the server and on the client for every swing after that was born.
- 
- I will likely include a section in here on best practices and extra considerations for Client/Server duality.
  
  ## Textures & GUI
  ### Intro
