@@ -49,4 +49,12 @@ public class XPGainMessage implements IMessage {
         buf.writeCharSequence(skillName, Charset.defaultCharset());
         buf.writeInt(xpGained);
     }
+
+    public String getSkillName() {
+        return skillName;
+    }
+
+    public int getXpGained() {
+        return xpGained;
+    }
 }

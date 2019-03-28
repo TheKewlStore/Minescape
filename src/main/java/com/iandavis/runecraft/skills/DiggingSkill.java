@@ -3,14 +3,22 @@ package com.iandavis.runecraft.skills;
 import com.iandavis.runecraft.events.LevelUpEvent;
 import com.iandavis.runecraft.events.XPGainEvent;
 import com.iandavis.runecraft.gui.Position;
+import com.iandavis.runecraft.proxy.ClientProxy;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 public class DiggingSkill extends BasicSkill {
+    private static boolean temporaryHardnessCheck = false;
+
     @Override
     public String getName() {
         return "Digging";
@@ -39,66 +47,80 @@ public class DiggingSkill extends BasicSkill {
                 16);
     }
 
-    private float getDiggingSpeedModifier() {
-        if (getLevel() >= 99) {
-            return 9.0f;
-        } else if (getLevel() > 90) {
-            return 8.5f;
-        } else if (getLevel() > 85) {
-            return 8.0f;
-        } else if (getLevel() > 80) {
-            return 7.5f;
-        } else if (getLevel() > 70) {
-            return 7.0f;
-        } else if (getLevel() > 60) {
-            return 6.5f;
-        } else if (getLevel() > 50) {
-            return 6.0f;
-        } else if (getLevel() > 45) {
-            return 5.5f;
-        } else if (getLevel() > 40) {
-            return 5.0f;
-        } else if (getLevel() > 35) {
-            return 4.5f;
-        } else if (getLevel() > 30) {
-            return 4.0f;
-        } else if (getLevel() > 25) {
-            return 3.5f;
-        } else if (getLevel() > 20) {
-            return 3.0f;
-        } else if (getLevel() > 15) {
-            return 2.5f;
-        } else if (getLevel() > 10) {
-            return 2.0f;
-        } else if (getLevel() > 5) {
-            return 1.5f;
-        } else {
-            return 1.0f;
-        }
+    private float getDiggingSpeedModifier(float blockHardness, float playerRelativeBlockHardness) {
+        float multiplier = ((float) getLevel() / getMaxLevel()) * 30.0f;
+        return (multiplier * blockHardness) / playerRelativeBlockHardness;
     }
 
     @SubscribeEvent
     public static void determineBreakSpeed(PlayerEvent.BreakSpeed event) {
+        if (temporaryHardnessCheck) {
+            logger.info("Ignoring hardness check for now");
+            temporaryHardnessCheck = false;
+            return;
+        }
+
+        if (event.getEntityPlayer() == null) {
+            return;
+        }
+
         if (event.getState().getBlock() != Blocks.DIRT && event.getState().getBlock() != Blocks.GRASS) {
             return;
         }
 
-        DiggingSkill skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
+        DiggingSkill skill;
 
-        if (event.getState().getBlock() == Blocks.GRASS) {
-            event.setNewSpeed(event.getOriginalSpeed() * skill.getDiggingSpeedModifier() * 5);
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
         } else {
-            event.setNewSpeed(event.getOriginalSpeed() * skill.getDiggingSpeedModifier());
+            if (ClientProxy.getSkillCapability() == null) {
+                return;
+            } else {
+                skill = (DiggingSkill) ClientProxy.getSkillCapability().getSkill("Digging");
+            }
         }
 
+        float blockHardness = event.getState().getBlockHardness(event.getEntityPlayer().world, event.getPos());
+        float newBreakSpeed = event.getNewSpeed();
+        float skillLevelRatio = ((float) skill.getLevel() / skill.getMaxLevel());
+
+        if (!event.getEntityPlayer().canHarvestBlock(event.getState())) {
+            newBreakSpeed *= skillLevelRatio * 100.0f;
+        } else {
+            newBreakSpeed *= skillLevelRatio * 30.0f;
+        }
+
+        if (event.getEntityPlayer().isInsideOfMaterial(Material.WATER)) {
+            newBreakSpeed *= skillLevelRatio * 5.0f;
+        }
+
+        logger.info(String.format(
+                "Original breaking speed is: %f",
+                event.getNewSpeed()));
+        logger.info(String.format(
+                "Original block hardness is: %f",
+                blockHardness));
+        logger.info(String.format(
+                "Break speed at level %d will be set to: %f",
+                skill.getLevel(),
+                newBreakSpeed));
+
+        event.setNewSpeed(newBreakSpeed);
     }
 
     @SubscribeEvent
     public static void onBreakEvent(BlockEvent.BreakEvent event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+            return;
+        }
+
+        logger.info("Received onBreakEvent!");
+
         if (event.getState().getBlock() == Blocks.DIRT || event.getState().getBlock() == Blocks.GRASS) {
             ISkill skill = getCapabilityFromEvent(event).getSkill("Digging");
 
             int xpEarned = 10;
+            int currentLevel = skill.getLevel();
             int xpToNextLevel = skill.xpToNextLevel();
 
             skill.gainXP(xpEarned);
@@ -106,7 +128,7 @@ public class DiggingSkill extends BasicSkill {
             XPGainEvent xpEvent = new XPGainEvent(skill, event.getPlayer(), xpEarned);
             MinecraftForge.EVENT_BUS.post(xpEvent);
 
-            if (xpEarned >= xpToNextLevel) {
+            if (xpEarned >= xpToNextLevel && currentLevel < skill.getMaxLevel()) {
                 LevelUpEvent levelEvent = new LevelUpEvent(skill, event.getPlayer());
                 MinecraftForge.EVENT_BUS.post(levelEvent);
             }

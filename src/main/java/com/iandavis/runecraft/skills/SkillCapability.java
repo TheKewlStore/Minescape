@@ -37,6 +37,11 @@ public class SkillCapability implements ISkillCapability {
     }
 
     @Override
+    public void setAllSkills(Map<String, ISkill> newSkills) {
+        this.skills.putAll(newSkills);
+    }
+
+    @Override
     public void serializePacket(ByteBuf buf) {
         buf.writeInt(skills.size());
 

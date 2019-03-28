@@ -27,6 +27,8 @@ public interface ISkillCapability {
      */
     ISkill getSkill(String name);
 
+    void setAllSkills(Map<String, ISkill> newSkills);
+
     void serializePacket(ByteBuf buf);
 
     void deserializePacket(ByteBuf buf);

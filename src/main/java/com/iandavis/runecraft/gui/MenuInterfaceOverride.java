@@ -1,10 +1,7 @@
 package com.iandavis.runecraft.gui;
 
 import com.iandavis.runecraft.RunecraftMain;
-import com.iandavis.runecraft.network.StatsRequestMessage;
-import com.iandavis.runecraft.network.StatsResponseHandler;
-import com.iandavis.runecraft.network.StatsResponseMessage;
-import com.iandavis.runecraft.proxy.CommonProxy;
+import com.iandavis.runecraft.proxy.ClientProxy;
 import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import com.iandavis.runecraft.skills.SkillIcon;
@@ -14,7 +11,6 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.io.IOException;
 
@@ -22,7 +18,6 @@ public class MenuInterfaceOverride extends GuiInventory {
     private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(RunecraftMain.MODID, "textures/gui/skills.png");
     private GuiButton skillsButton;
     private boolean skillsTabActive = false;
-    private ISkillCapability skillCapability = null;
 
     private enum ButtonIDs {
         SkillsButton
@@ -53,9 +48,6 @@ public class MenuInterfaceOverride extends GuiInventory {
                 new ResourceLocation(RunecraftMain.MODID, "textures/gui/skills.png"));
 
         this.buttonList.add(skillsButton);
-
-        StatsResponseHandler.registerSingleShotListener(this::loadSkillCapability);
-        CommonProxy.networkWrapper.sendToServer(new StatsRequestMessage());
     }
 
     @Override
@@ -82,14 +74,23 @@ public class MenuInterfaceOverride extends GuiInventory {
                 176,
                 166);
 
-        Color color = new Color(255, 144, 76, 255);
+        Color color = new Color(255, 255, 255, 255);
 
-        if (skillCapability == null) {
-            super.drawString(this.mc.fontRenderer,
-                    "Loading Player Stats from server...",
-                    this.guiLeft + 30,
-                    this.guiTop + 8,
+        ISkillCapability skillCapability = ClientProxy.getSkillCapability();
+
+        if (ClientProxy.getSkillCapability() == null) {
+            ClientProxy.updateSkillCapability();
+            super.drawCenteredString(this.mc.fontRenderer,
+                    "Loading Player Stats",
+                    this.guiLeft + 87,
+                    this.guiTop + 130,
                     color.getIntValue());
+            super.drawCenteredString(this.mc.fontRenderer,
+                    "from server...",
+                    this.guiLeft + 87,
+                    this.guiTop + 141,
+                    color.getIntValue());
+            GlStateManager.popMatrix();
             return;
         }
 
@@ -161,14 +162,6 @@ public class MenuInterfaceOverride extends GuiInventory {
         float y = this.guiTop + 17 + (3.0f * row);
 
         return new Position(x, y);
-    }
-
-    private void loadSkillCapability(StatsResponseMessage message, MessageContext context) {
-        if (message == null || context == null) {
-            return;
-        }
-
-        skillCapability = message.getSkillCapability();
     }
 
     @Override

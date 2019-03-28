@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
@@ -119,5 +120,12 @@ public abstract class BasicSkill implements ISkill {
 
     public static ISkillCapability getCapabilityFromEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent event) {
         return getCapabilityFromPlayer(event.player);
+    }
+
+    @SubscribeEvent
+    public static void onPlayerRespawn(PlayerEvent.Clone event) {
+        ISkillCapability oldCapability = getCapabilityFromPlayer(event.getOriginal());
+        ISkillCapability newCapability = getCapabilityFromEvent(event);
+        newCapability.setAllSkills(oldCapability.getAllSkills());
     }
 }
