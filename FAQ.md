@@ -8,6 +8,7 @@ of this document.
 ## Table of Contents
 1. [Client/Server Duality](#client/server-duality)
 1. [Block Break Speed](#block-break-speed)
+1. [Textures & Gui](#textures-&-gui)
  
 ## Client/Server Duality
 ### Intro
