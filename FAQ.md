@@ -35,18 +35,6 @@ single-player games is to use the serverStart event in a CommonProxy, which is O
 to do any server initialization that is required of your mod. That way, whether you're in a single or multi-player game,
 your server handlers will all be initialized properly.
 
-Another problem for single-player server/client duality specifically is duplicate instantiation. 
-The specific scenario here is a client starting a single-player game, leaving, then starting a new world.
-It seems that the first time a single-player game is started, minecraft will leave the server running or "cache" it
-and any initialization that gets done on it will persist into new games created.
-
-However, despite this being true, the serverStarted event will be called again everytime a new single-player game is
-created. This causes two dilemmas, one being that your serverStarted handler needs to keep a flag to determine whether
-the initialization has already run, in which case no more 
-EventHandler registrations or Packet Message registrations should be run (or cause a crash),
-but any necessary client data does need to be resynched (i.e custom capability data that the client gets through messages), 
-otherwise any such data required will still exist but be cached from the first game's instance.   
-
 Look at the CommonProxy class in the runecraft source under the proxy package 
 to see an example of handling the serverStarted event and subsequently registering 
 all required events and network packets that the server requires.
@@ -78,6 +66,19 @@ each of your Packet Message classes that handle registering that message on the 
 This allows you to keep better track of the sidedness of the message and not get confused in the proxies about registration. 
 You can see an example of this in any of the Message classes in the network package of runecraft. 
 Each proxy then only needs to concern itself with calling the proper method on each Message class when ready to register.
+
+### Singleplayer Reinitialization
+Another problem for single-player server/client duality specifically is duplicate instantiation. 
+The specific scenario here is a client starting a single-player game, leaving, then starting a new world.
+It seems that the first time a single-player game is started, minecraft will leave the server running or "cache" it
+and any initialization that gets done on it will persist into new games created.
+
+However, despite this being true, the serverStarted event will be called again everytime a new single-player game is
+created. This causes two dilemmas, one being that your serverStarted handler needs to keep a flag to determine whether
+the initialization has already run, in which case no more 
+EventHandler registrations or Packet Message registrations should be run (or cause a crash),
+but any necessary client data does need to be resynched (i.e custom capability data that the client gets through messages), 
+otherwise any such data required will still exist but be cached from the first game's instance.   
 
 ## Block Break Speed
 In Minecraft Forge, there exists PlayerEvent.BreakSpeed which is an event fired on the bus that allows handlers
