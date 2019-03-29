@@ -50,6 +50,7 @@ public class CommonProxy implements Proxy {
     @Override
     public void serverStarting(FMLServerStartingEvent event) {
         if (registeredServer) {
+            ClientProxy.updateSkillCapability();
             return;
         }
 
