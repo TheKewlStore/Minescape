@@ -5,6 +5,8 @@ import com.iandavis.runecraft.proxy.ClientProxy;
 import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import com.iandavis.runecraft.skills.SkillIcon;
+import javafx.scene.input.MouseButton;
+import net.java.games.input.Mouse;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -13,11 +15,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 public class MenuInterfaceOverride extends GuiInventory {
     private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(RunecraftMain.MODID, "textures/gui/skills.png");
     private GuiButton skillsButton;
     private boolean skillsTabActive = false;
+    private List<String> skillNameIndices = new ArrayList<>();
+    private ISkill activeSkillDisplay = null;
 
     private enum ButtonIDs {
         SkillsButton
@@ -74,7 +82,7 @@ public class MenuInterfaceOverride extends GuiInventory {
                 176,
                 166);
 
-        Color color = new Color(255, 255, 255, 255);
+        Color white = new Color(255, 255, 255, 255);
 
         ISkillCapability skillCapability = ClientProxy.getSkillCapability();
 
@@ -84,20 +92,44 @@ public class MenuInterfaceOverride extends GuiInventory {
                     "Loading Player Stats",
                     this.guiLeft + 87,
                     this.guiTop + 130,
-                    color.getIntValue());
+                    white.getIntValue());
             super.drawCenteredString(this.mc.fontRenderer,
                     "from server...",
                     this.guiLeft + 87,
                     this.guiTop + 141,
-                    color.getIntValue());
+                    white.getIntValue());
             GlStateManager.popMatrix();
             return;
         }
 
         int skillIndex = 1;
+        skillNameIndices = new ArrayList<>();
+
+        Color orange = new Color(217, 146, 24, 255);
 
         for (String skillName: skillCapability.getAllSkillXP().keySet()) {
-            drawSkill(skillIndex++, skillCapability.getSkill(skillName));
+            skillNameIndices.add(skillName);
+            ISkill thisSkill = skillCapability.getSkill(skillName);
+
+            if (thisSkill == activeSkillDisplay) {
+                drawSkill(skillIndex++, thisSkill, orange);
+                // Draw the extra stuff in the bottom display window if this is the actively clicked skill icon.
+                drawSkillIcon(
+                        activeSkillDisplay.getSkillIcon(),
+                        new Position(this.guiLeft + 10, this.guiTop + 132));
+                mc.fontRenderer.drawString(
+                        String.format("Current XP: %d", activeSkillDisplay.getXP()),
+                        this.guiLeft + 25,
+                        this.guiTop + 130,
+                        white.getIntValue());
+                mc.fontRenderer.drawString(
+                        String.format("XP to next level: %d", activeSkillDisplay.xpToNextLevel()),
+                        this.guiLeft + 25,
+                        this.guiTop + 141,
+                        white.getIntValue());
+            } else {
+                drawSkill(skillIndex++, thisSkill, white);
+            }
         }
 
         skillsButton.drawButton(this.mc, mouseX, mouseY, partialTicks);
@@ -105,7 +137,7 @@ public class MenuInterfaceOverride extends GuiInventory {
         GlStateManager.popMatrix();
     }
 
-    private void drawSkill(int skillIndex, ISkill skill) {
+    private void drawSkill(int skillIndex, ISkill skill, Color color) {
         Position levelPosition = getLevelPosition(skillIndex);
         Position iconPosition = getIconPosition(skillIndex);
         SkillIcon skillIcon = skill.getSkillIcon();
@@ -113,20 +145,7 @@ public class MenuInterfaceOverride extends GuiInventory {
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        mc.getTextureManager().bindTexture(skillIcon.getTextureLocation());
-        drawScaledCustomSizeModalRect(
-                (int) iconPosition.getX(),
-                (int) iconPosition.getY(),
-                0.0f,
-                0.0f,
-                skillIcon.getTexWidth(),
-                skillIcon.getTexHeight(),
-                12,
-                12,
-                skillIcon.getTexWidth(),
-                skillIcon.getTexHeight());
-
-        Color color = new Color(255, 255, 255, 255);
+        drawSkillIcon(skillIcon, iconPosition);
 
         mc.fontRenderer.drawString(
                 String.valueOf(skill.getLevel()),
@@ -164,6 +183,21 @@ public class MenuInterfaceOverride extends GuiInventory {
         return new Position(x, y);
     }
 
+    private void drawSkillIcon(SkillIcon skillIcon, Position location) {
+        mc.getTextureManager().bindTexture(skillIcon.getTextureLocation());
+        drawScaledCustomSizeModalRect(
+                (int) location.getX(),
+                (int) location.getY(),
+                0.0f,
+                0.0f,
+                skillIcon.getTexWidth(),
+                skillIcon.getTexHeight(),
+                12,
+                12,
+                skillIcon.getTexWidth(),
+                skillIcon.getTexHeight());
+    }
+
     @Override
     public void actionPerformed(GuiButton button) throws IOException {
         if (skillsButton != null && button != skillsButton) {
@@ -176,11 +210,30 @@ public class MenuInterfaceOverride extends GuiInventory {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        if (mouseButton != 0) {
+            return;
+        }
+
         if (skillsTabActive &&
                 mouseX > this.guiLeft + 7 &&
                 mouseX < this.guiLeft + 167 &&
                 mouseY > this.guiTop + 17 &&
                 mouseY < this.guiTop + 121) {
+            int row = (int) ((mouseY - this.guiTop - 17) / 14.0f);
+            int column = (int) ((mouseX - this.guiLeft - 7) / 53.0f);
+            int skillIndex = (row * 3) + column;
+            ISkillCapability skillCapability = ClientProxy.getSkillCapability();
+
+            if (skillIndex > skillNameIndices.size() - 1) {
+                logger.warn(String.format("No Skill definition exists for skills page index %d", skillIndex));
+                return;
+            } else if (skillIndex < 0) {
+                logger.warn(String.format("The skill index calculation returned a negative value for mouse coordinates: %d, %d - value of %d", mouseX, mouseY, skillIndex));
+                return;
+            }
+
+            String skillName = skillNameIndices.get(skillIndex);
+            activeSkillDisplay = skillCapability.getSkill(skillName);
         } else {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }

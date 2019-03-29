@@ -7,8 +7,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.iandavis.runecraft.proxy.CommonProxy.logger;
-
 /**
  * Simple Implementation of the ISkill interface which provides all the basic functionality required.
  * For an example of a complete skill based off of this implementation, view the DiggingSkill class.
@@ -17,7 +15,7 @@ public abstract class BasicSkill implements ISkill {
     protected int currentXP;
 
     private final int[] xpLevels = new int[]{
-            0, 100, 225, 400, 675, 1025, 1385, 1795, 2345, 2987, // 10
+            0, 50, 125, 225, 450, 675, 1050, 1430, 2090, 2987, // 10
             3545, 5690, 7835, 9980, 12125, 14270, 16415, 18560, 20705, 22850, // 20
             24995, 25000, 26000, 27000, 28000, 29000, 30000, 31000, 32000, 33000, 34000, // 30
             35000, 36000, 37000, 38000, 39000, 40000, 41000, 42000, 43000, 44000, 45000, // 40
@@ -65,7 +63,6 @@ public abstract class BasicSkill implements ISkill {
 
         for (int level = 1; level < xpLevels.length; level++) {
             if (xpLevels[level] > currentXP) {
-                logger.info("XP Required for level: " + String.valueOf(level + 1) + " - " + String.valueOf(xpLevels[level] - currentXP));
                 return xpLevels[level] - currentXP;
             }
         }
@@ -81,7 +78,6 @@ public abstract class BasicSkill implements ISkill {
     @Override
     public void setLevel(int newLevel) {
         currentXP = xpLevels[newLevel - 1];
-        logger.info(String.format("Setting xp for %s to %d", getName(), xpLevels[newLevel - 1]));
     }
 
     @Override

@@ -25,6 +25,7 @@ public class CommonProxy implements Proxy {
     private SkillStorage skillStorage;
     public static Logger logger;
     public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(RunecraftMain.MODID);
+    private static boolean registeredServer = false;
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -48,6 +49,11 @@ public class CommonProxy implements Proxy {
 
     @Override
     public void serverStarting(FMLServerStartingEvent event) {
+        if (registeredServer) {
+            return;
+        }
+
+        registeredServer = true;
         event.registerServerCommand(new CheckXPCommand());
         event.registerServerCommand(new SetLevelCommand());
 
