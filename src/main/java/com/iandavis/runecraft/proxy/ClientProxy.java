@@ -1,7 +1,9 @@
 package com.iandavis.runecraft.proxy;
 
 import com.iandavis.runecraft.gui.MenuInterfaceOverride;
+import com.iandavis.runecraft.gui.SkillBarHUD;
 import com.iandavis.runecraft.network.*;
+import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import com.iandavis.runecraft.skills.SkillCapability;
 import com.iandavis.runecraft.skills.SkillCapabilityProvider;
@@ -27,6 +29,7 @@ import static com.iandavis.runecraft.proxy.CommonProxy.logger;
 
 public class ClientProxy implements Proxy {
     private static ISkillCapability skillCapability = null;
+    private static ISkill activelyTrainedSkill = null;
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
@@ -41,6 +44,7 @@ public class ClientProxy implements Proxy {
 
         StatsResponseHandler.registerSingleShotListener(ClientProxy::loadSkillCapability);
 
+        MinecraftForge.EVENT_BUS.register(new SkillBarHUD());
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -82,6 +86,14 @@ public class ClientProxy implements Proxy {
         } else if (event.getGui() instanceof GuiContainerCreative) {
 
         }
+    }
+
+    public static void setActivelyTrainedSkill(ISkill newActiveSkill) {
+        activelyTrainedSkill = newActiveSkill;
+    }
+
+    public static ISkill getActivelyTrainedSkill() {
+        return activelyTrainedSkill;
     }
 
     private static void loadSkillCapability(StatsResponseMessage message, MessageContext context) {

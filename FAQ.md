@@ -239,5 +239,20 @@ See the Color class in the gui package for an example on how to generate a prope
  wooden items in the game have ids such as "minecraft:wooden_shovel" but their textures are named "wood_shovel.png"
  which caused confusion.
  
+ ### Custom HUD Elements
+ When drawing custom HUD elements (or overriding default ones perhaps), a quick google search will tell you to subscribe
+ to the RenderGameOverlayEvent and do whatever drawing you need to do. When you look at this class, you'll see that
+ there are two sub events of this type, Pre and Post, which are fired before and after the vanilla rendering,
+ respectively. What isn't immediately evident about this is that these events are actually fired several times over,
+ one for each "stage" of the vanilla gui that gets rendered. You can see this in the RengerGameOverlayEvent class's
+ ElementType enum. There are a bunch of different stages, i.e HEALTH, FOOD, etc. If, in your event handler, 
+ you need to bind a texture to be drawn to the screen (likely), it's imperative that you check the value of the 
+ ElementType of the event parameter in your function and ONLY render when it's equal to ElementType.ALL.
+ 
+ This is because all of the vanilla renderers make an assumption that THEIR proper texture 
+ will be bound during their render, and don't do anything to ensure that's true. 
+ What you'll immediately notice if you don't respect this fact is the food bar textures 
+ turning into a random remnant of your texture (or perhaps dissapearing depending on your texture contents)
+ 
  # TODO
 Filled everything in for now. Will add more as development continues.

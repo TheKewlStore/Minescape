@@ -1,6 +1,7 @@
 package com.iandavis.runecraft.network;
 
 import com.iandavis.runecraft.proxy.ClientProxy;
+import com.iandavis.runecraft.skills.ISkill;
 import com.iandavis.runecraft.skills.ISkillCapability;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -16,7 +17,10 @@ public class XPGainHandler implements IMessageHandler<XPGainMessage, IMessage> {
         }
 
         ISkillCapability skillCapability = ClientProxy.getSkillCapability();
-        skillCapability.getSkill(message.getSkillName()).gainXP(message.getXpGained());
+        ISkill skill = skillCapability.getSkill(message.getSkillName());
+
+        skill.gainXP(message.getXpGained());
+        ClientProxy.setActivelyTrainedSkill(skill);
 
         return null;
     }

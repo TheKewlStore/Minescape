@@ -47,7 +47,12 @@ public class AttackSkill extends BasicSkill {
         EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
         ISkill attackSkill = getCapabilityFromPlayer(player).getSkill("Attack");
 
+        float skillLevelRatio = ((float) attackSkill.getLevel() / attackSkill.getMaxLevel());
+
+        event.setAmount(event.getAmount() + event.getAmount() * skillLevelRatio + event.getEntityLiving().getHealth() * (0.1f * skillLevelRatio));
+
         int xpToNextLevel = attackSkill.xpToNextLevel();
+        int currentLevel = attackSkill.getLevel();
 
         int xpGained = (int) event.getAmount() * 10;
         attackSkill.gainXP(xpGained);
@@ -55,7 +60,7 @@ public class AttackSkill extends BasicSkill {
         XPGainEvent xpGainEvent = new XPGainEvent(attackSkill, player, xpGained);
         MinecraftForge.EVENT_BUS.post(xpGainEvent);
 
-        if (xpGained >= xpToNextLevel) {
+        if (xpGained >= xpToNextLevel && currentLevel < attackSkill.getMaxLevel()) {
             LevelUpEvent levelUpEvent = new LevelUpEvent(attackSkill, player);
             MinecraftForge.EVENT_BUS.post(levelUpEvent);
         }
