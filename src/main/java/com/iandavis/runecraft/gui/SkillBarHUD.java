@@ -7,6 +7,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -23,17 +24,18 @@ public class SkillBarHUD extends Gui {
             return;
         }
 
+        Minecraft mc = Minecraft.getMinecraft();
+
         ScaledResolution resolution = event.getResolution();
-        int xPos = (resolution.getScaledWidth() * 3 / 8);
-        int yPos = resolution.getScaledHeight() * 25 / 32;
+        int xPos = resolution.getScaledWidth() / 2 - 91;
+        int yPos = resolution.getScaledHeight() - GuiIngameForge.left_height;
+        GuiIngameForge.left_height += 16;
 
         ISkill activeSkill = ClientProxy.getActivelyTrainedSkill();
 
         if (activeSkill == null) {
             return;
         }
-
-        Minecraft mc = Minecraft.getMinecraft();
 
         if (!mc.playerController.shouldDrawHUD()) {
             return;
