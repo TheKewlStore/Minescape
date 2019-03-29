@@ -49,12 +49,13 @@ public class AttackSkill extends BasicSkill {
 
         int xpToNextLevel = attackSkill.xpToNextLevel();
 
-        attackSkill.gainXP((int) event.getAmount() * 10);
+        int xpGained = (int) event.getAmount() * 10;
+        attackSkill.gainXP(xpGained);
 
-        XPGainEvent xpGainEvent = new XPGainEvent(attackSkill, player, (int) event.getAmount());
+        XPGainEvent xpGainEvent = new XPGainEvent(attackSkill, player, xpGained);
         MinecraftForge.EVENT_BUS.post(xpGainEvent);
 
-        if ((int) event.getAmount() >= xpToNextLevel) {
+        if (xpGained >= xpToNextLevel) {
             LevelUpEvent levelUpEvent = new LevelUpEvent(attackSkill, player);
             MinecraftForge.EVENT_BUS.post(levelUpEvent);
         }

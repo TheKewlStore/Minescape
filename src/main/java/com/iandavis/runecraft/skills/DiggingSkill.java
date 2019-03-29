@@ -47,9 +47,8 @@ public class DiggingSkill extends BasicSkill {
                 16);
     }
 
-    private float getDiggingSpeedModifier(float blockHardness, float playerRelativeBlockHardness) {
-        float multiplier = ((float) getLevel() / getMaxLevel()) * 30.0f;
-        return (multiplier * blockHardness) / playerRelativeBlockHardness;
+    private float getDiggingSpeedModifier() {
+        return ((((float) getLevel() / getMaxLevel()) * 30.0f) / 10.0f) + 1.0f;
     }
 
     @SubscribeEvent
@@ -80,26 +79,11 @@ public class DiggingSkill extends BasicSkill {
             }
         }
 
-        float blockHardness = event.getState().getBlockHardness(event.getEntityPlayer().world, event.getPos());
-        float newBreakSpeed = event.getNewSpeed();
-        float skillLevelRatio = ((float) skill.getLevel() / skill.getMaxLevel()) + 0.05f;
-
-        if (!event.getEntityPlayer().canHarvestBlock(event.getState())) {
-            newBreakSpeed *= skillLevelRatio * 100.0f;
-        } else {
-            newBreakSpeed *= skillLevelRatio * (30.0f * blockHardness);
-        }
-
-        if (event.getEntityPlayer().isInsideOfMaterial(Material.WATER)) {
-            newBreakSpeed *= skillLevelRatio * 5.0f;
-        }
+        float newBreakSpeed = skill.getDiggingSpeedModifier();
 
         logger.debug(String.format(
                 "Original breaking speed is: %f",
                 event.getNewSpeed()));
-        logger.debug(String.format(
-                "Original block hardness is: %f",
-                blockHardness));
         logger.debug(String.format(
                 "Break speed at level %d will be set to: %f",
                 skill.getLevel(),
