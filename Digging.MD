@@ -23,6 +23,9 @@ rewards and restrictions based on your level in the skill.
 
 # Restrictions
 ## Overview
-- 
--
-- 
+- Level 1-15 - Wooden Shovel only (all higher will not break blocks)
+- Level 15 - 30 - Stone Shovel and below
+- Level 30 - 60 - Iron Shovel and below
+- Level 60 - 80 - Gold Shovel and below (gold shovel gets innate bonus to resources yield)
+- Level 80 - 99 - All tool types
+- Mod makers will be able to define their own level requirements for custom tools.
