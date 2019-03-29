@@ -79,7 +79,7 @@ public class DiggingSkill extends BasicSkill {
             }
         }
 
-        float newBreakSpeed = skill.getDiggingSpeedModifier();
+        float newBreakSpeed = event.getOriginalSpeed() * skill.getDiggingSpeedModifier();
 
         logger.debug(String.format(
                 "Original breaking speed is: %f",
