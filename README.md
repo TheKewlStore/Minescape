@@ -2,7 +2,7 @@ Runecraft is based off of the Minecraft Forge API.
 This project is still in very early development.
 
 # Proposed Skills
-* Digging - https://github.com/TheKewlStore/Runecraft/commit/71e1482cd7e714b52f7cad273e677182d7e46056
+* [Digging](Digging.MD)
 * Mining
 * Farming
 * Fishing
