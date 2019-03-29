@@ -35,6 +35,18 @@ single-player games is to use the serverStart event in a CommonProxy, which is O
 to do any server initialization that is required of your mod. That way, whether you're in a single or multi-player game,
 your server handlers will all be initialized properly.
 
+Another problem for single-player server/client duality specifically is duplicate instantiation. 
+The specific scenario here is a client starting a single-player game, leaving, then starting a new world.
+It seems that the first time a single-player game is started, minecraft will leave the server running or "cache" it
+and any initialization that gets done on it will persist into new games created.
+
+However, despite this being true, the serverStarted event will be called again everytime a new single-player game is
+created. This causes two dilemmas, one being that your serverStarted handler needs to keep a flag to determine whether
+the initialization has already run, in which case no more 
+EventHandler registrations or Packet Message registrations should be run (or cause a crash),
+but any necessary client data does need to be resynched (i.e custom capability data that the client gets through messages), 
+otherwise any such data required will still exist but be cached from the first game's instance.   
+
 Look at the CommonProxy class in the runecraft source under the proxy package 
 to see an example of handling the serverStarted event and subsequently registering 
 all required events and network packets that the server requires.
@@ -78,33 +90,33 @@ Firstly, a general overview of all the mechanics that Minecraft/Forge uses to de
 - Whether or not the block is 'harvestable' (see link above) based on the player in questions' equipped tool (or hands)
 - Whether the player is standing in water, lava, etc. or in the air.
  
- The most obvious question is how to determine what TYPE of block is being broken in this event handler.
- The answer is simple but not as intuitive as it should be without any documentation, the event in the handler
- has a parameter blockState, which has a reference to the block accessed like so:
+The most obvious question is how to determine what TYPE of block is being broken in this event handler.
+The answer is simple but not as intuitive as it should be without any documentation, the event in the handler
+has a parameter blockState, which has a reference to the block accessed like so:
  
      event.getState().getBlock()
      
- If, as in my case, you want to check this against vanilla blocks you aren't creating yourself, 
- the way to do so is again simple but not intuitive:
+If, as in my case, you want to check this against vanilla blocks you aren't creating yourself, 
+the way to do so is again simple but not intuitive:
  
      event.getState().getBlock() != Blocks.DIRT
      
- The Blocks class contains references to all (or at least most, hopefully all) vanilla blocks accessed in the same way as above.
+The Blocks class contains references to all (or at least most, hopefully all) vanilla blocks accessed in the same way as above.
  
- Firstly, the routine onPlayerDamageBlock in the PlayerControllerMP class is called. 
- Ignoring some other irrelevant logic, this method calls getPlayerRelativeBlockHardness on the BlockState being hit.
- This function, as defined in the BlockStateContainer implementation, 
- calls ForgeHooks.blockStrength through some extra layers in the Block class.
- In this function, we see our first reference to some actual calculations, namely the following:
+Firstly, the routine onPlayerDamageBlock in the PlayerControllerMP class is called. 
+Ignoring some other irrelevant logic, this method calls getPlayerRelativeBlockHardness on the BlockState being hit.
+This function, as defined in the BlockStateContainer implementation, 
+calls ForgeHooks.blockStrength through some extra layers in the Block class.
+In this function, we see our first reference to some actual calculations, namely the following:
  
      player.getDigSpeed(BlockState, BlockPos) / BlockState.getHardness() / harvestModifier
      
- Where harvestModifier is 30F is the block is harvestable by the player, 100F otherwise.
- player.getDigSpeed(BlockState, BlockPos) is essentially the handler that will call any BreakSpeed event handlers
- and return the final result.  
- This block strength value is returned to PlayerControllerMp.
+Where harvestModifier is 30F is the block is harvestable by the player, 100F otherwise.
+player.getDigSpeed(BlockState, BlockPos) is essentially the handler that will call any BreakSpeed event handlers
+and return the final result.  
+This block strength value is returned to PlayerControllerMp.
  
- The final relevant logic in PlayerControllerMp is as follows:
+The final relevant logic in PlayerControllerMp is as follows:
  
      this.curBlockDamageMP += iblockstate.getPlayerRelativeBlockHardness(this.mc.player, this.mc.player.world, posBlock);
      
@@ -117,50 +129,50 @@ Firstly, a general overview of all the mechanics that Minecraft/Forge uses to de
          this.stepSoundTickCounter = 0.0F;
          this.blockHitDelay = 5;
      }
-     
- Which tells us that when the final value calculated above has accumulated to a value greater than 1.0, 
- the block is broken.
  
- Now that we have a good idea of what kind of values we need to consider when determining how to modify 
- the block speed, the final consideration that must be made is that this event appears to be fired both 
- Server and Client (logical) side, but in a slightly surprising way. 
+Which tells us that when the final value calculated above has accumulated to a value greater than 1.0, 
+the block is broken.
+
+Now that we have a good idea of what kind of values we need to consider when determining how to modify 
+the block speed, the final consideration that must be made is that this event appears to be fired both 
+Server and Client (logical) side, but in a slightly surprising way. 
+
+It appears that when the block is initially broken, the event is fired on the server, after which point
+it is fired successively for each swing on the client side until the block is determined broken at which point
+that event will be sent back to the server for processing.
+This fact means that you effectively need to register an event handler for the 
+BreakSpeed event on both servers and clients, which will unfortunately add complexity 
+as clients will need to be fed any and all information required for you to modify the speed sent to them via packets.
+My original problem in relation to break speed was due to only handling the event 
+on the server side because I assumed that was all that was necessary. 
+This doesn't cause an error or any kind of crash, 
+instead it will only cause any change to the 
+actual break speed if you set the break speed high enough to break the block instantly.
+This is where the understanding that the break speed is only fired once on 
+the server and on the client for every swing after that was born.
  
- It appears that when the block is initially broken, the event is fired on the server, after which point
- it is fired successively for each swing on the client side until the block is determined broken at which point
- that event will be sent back to the server for processing.
- This fact means that you effectively need to register an event handler for the 
- BreakSpeed event on both servers and clients, which will unfortunately add complexity 
- as clients will need to be fed any and all information required for you to modify the speed sent to them via packets.
- My original problem in relation to break speed was due to only handling the event 
- on the server side because I assumed that was all that was necessary. 
- This doesn't cause an error or any kind of crash, 
- instead it will only cause any change to the 
- actual break speed if you set the break speed high enough to break the block instantly.
- This is where the understanding that the break speed is only fired once on 
- the server and on the client for every swing after that was born.
+## Textures & GUI
+### Intro
+This section will discuss a few different issues I've had with creating a custom GUI on the inventory screen
+and couldn't find much helpful documentation for.
  
- ## Textures & GUI
- ### Intro
- This section will discuss a few different issues I've had with creating a custom GUI on the inventory screen
- and couldn't find much helpful documentation for.
+### Texture Scaling
+First up, texture scaling, a very big nuisance that is not discussed anywhere I could find. 
+The function drawTexturedModalRect, and any of it's offshoots, EXPECTS, nay requires, a size of 256X256.
+This is true because of the way it specifies texture coordinates against the in-game world coordinates,
+it uses a modifier value (defined as f for the width and fl for the height) as 0.00390625. 
+There isn't any documentation for this value, and it's not very plainly visible, but this is equivalent to 
+1/256, and when written in that form it's instantly clear what it's doing, or at least what the relationship is.
  
- ### Texture Scaling
- First up, texture scaling, a very big nuisance that is not discussed anywhere I could find. 
- The function drawTexturedModalRect, and any of it's offshoots, EXPECTS, nay requires, a size of 256X256.
- This is true because of the way it specifies texture coordinates against the in-game world coordinates,
- it uses a modifier value (defined as f for the width and fl for the height) as 0.00390625. 
- There isn't any documentation for this value, and it's not very plainly visible, but this is equivalent to 
- 1/256, and when written in that form it's instantly clear what it's doing, or at least what the relationship is.
+First off, for the simple case, make an image 256X256, put it in the src/main/resources/assets/{modid}/textures folder
+(or any dividend), bind the texture to the GlStateManager, then call drawTexturedModalRect. 
+For those with no experience with game texturing, you specify where to draw this texture on the screen, as well as
+coordinates in the image itself to draw from and to. This means that you can create a 256X256 image, only use
+the top 1/4 of the image, and draw only that 1/4 of the image, 
+and it will work just the same as having just a 64X64 image. But if you make the image 64X64 and call the same function
+the same way, it won't work because of the modifiers described above. 
  
- First off, for the simple case, make an image 256X256, put it in the src/main/resources/assets/{modid}/textures folder
- (or any dividend), bind the texture to the GlStateManager, then call drawTexturedModalRect. 
- For those with no experience with game texturing, you specify where to draw this texture on the screen, as well as
- coordinates in the image itself to draw from and to. This means that you can create a 256X256 image, only use
- the top 1/4 of the image, and draw only that 1/4 of the image, 
- and it will work just the same as having just a 64X64 image. But if you make the image 64X64 and call the same function
- the same way, it won't work because of the modifiers described above. 
- 
- Here is a simple example of drawing a texture used in runecraft:
+Here is a simple example of drawing a texture used in runecraft:
  
     // Push a new translation matrix into the state manager, so that
     // anything that renders after or before us isn't affected by our color settings, scaling, etc.
@@ -184,15 +196,15 @@ Firstly, a general overview of all the mechanics that Minecraft/Forge uses to de
     // Pop our matrix off the state manager, see the comment at pushMatrix for explanation.
     GlStateManager.popMatrix();
  
- In any case, everywhere the function drawTexturedModalRect is available, there SHOULD be two other functions, 
- drawModalRectWithCustomSizedTexture and drawScaledCustomSizeModalRect
+In any case, everywhere the function drawTexturedModalRect is available, there SHOULD be two other functions, 
+drawModalRectWithCustomSizedTexture and drawScaledCustomSizeModalRect
   
- drawModalRectWithCustomSizedTexture works the same as drawTexturedModalRect, 
- but allows you to specify width and height instead of using the assumed 256X256.
+drawModalRectWithCustomSizedTexture works the same as drawTexturedModalRect, 
+but allows you to specify width and height instead of using the assumed 256X256.
  
- drawScaledCustomSizeModalRect allows you to draw a custom-sized texture, 
- but will scale it up or down from the texture size based on the parameters.
- Here is an example of using the scaled custom size modal rect:
+drawScaledCustomSizeModalRect allows you to draw a custom-sized texture, 
+but will scale it up or down from the texture size based on the parameters.
+Here is an example of using the scaled custom size modal rect:
  
      mc.getTextureManager().bindTexture(skillIcon.getTextureLocation());
      drawScaledCustomSizeModalRect(
@@ -223,36 +235,36 @@ The solution to getting values for each color and alpha value, then, is to use b
 See the Color class in the gui package for an example on how to generate a proper value for the color you want.
  
  
- ### Vanilla Textures
- Another thing that could stand to be better explained in the documentation is accessing default minecraft resources.
- They work exactly the same as accessing your own mod resources, but you use the identifier "minecraft" instead of 
- your mod id when creating the resource location. 
+### Vanilla Textures
+Another thing that could stand to be better explained in the documentation is accessing default minecraft resources.
+They work exactly the same as accessing your own mod resources, but you use the identifier "minecraft" instead of 
+your mod id when creating the resource location. 
  
- For reference on all the vanilla textures and resources available,
- download one of the default resource packs here: https://minecraft-resourcepacks.com/default/
+For reference on all the vanilla textures and resources available,
+download one of the default resource packs here: https://minecraft-resourcepacks.com/default/
  
- For an example, here is a resource location definition for the texture of a wooden shovel:
+For an example, here is a resource location definition for the texture of a wooden shovel:
  
     ResourceLocation shovelIcon = new ResourceLocation("minecraft", "textures/items/wood_shovel.png");
  
- As a note to myself and others because it caught me for a while, 
- wooden items in the game have ids such as "minecraft:wooden_shovel" but their textures are named "wood_shovel.png"
- which caused confusion.
+As a note to myself and others because it caught me for a while, 
+wooden items in the game have ids such as "minecraft:wooden_shovel" but their textures are named "wood_shovel.png"
+which caused confusion.
  
- ### Custom HUD Elements
- When drawing custom HUD elements (or overriding default ones perhaps), a quick google search will tell you to subscribe
- to the RenderGameOverlayEvent and do whatever drawing you need to do. When you look at this class, you'll see that
- there are two sub events of this type, Pre and Post, which are fired before and after the vanilla rendering,
- respectively. What isn't immediately evident about this is that these events are actually fired several times over,
- one for each "stage" of the vanilla gui that gets rendered. You can see this in the RengerGameOverlayEvent class's
- ElementType enum. There are a bunch of different stages, i.e HEALTH, FOOD, etc. If, in your event handler, 
- you need to bind a texture to be drawn to the screen (likely), it's imperative that you check the value of the 
- ElementType of the event parameter in your function and ONLY render when it's equal to ElementType.ALL.
+### Custom HUD Elements
+When drawing custom HUD elements (or overriding default ones perhaps), a quick google search will tell you to subscribe
+to the RenderGameOverlayEvent and do whatever drawing you need to do. When you look at this class, you'll see that
+there are two sub events of this type, Pre and Post, which are fired before and after the vanilla rendering,
+respectively. What isn't immediately evident about this is that these events are actually fired several times over,
+one for each "stage" of the vanilla gui that gets rendered. You can see this in the RengerGameOverlayEvent class's
+ElementType enum. There are a bunch of different stages, i.e HEALTH, FOOD, etc. If, in your event handler, 
+you need to bind a texture to be drawn to the screen (likely), it's imperative that you check the value of the 
+ElementType of the event parameter in your function and ONLY render when it's equal to ElementType.ALL.
  
- This is because all of the vanilla renderers make an assumption that THEIR proper texture 
- will be bound during their render, and don't do anything to ensure that's true. 
- What you'll immediately notice if you don't respect this fact is the food bar textures 
- turning into a random remnant of your texture (or perhaps dissapearing depending on your texture contents)
+This is because all of the vanilla renderers make an assumption that THEIR proper texture 
+will be bound during their render, and don't do anything to ensure that's true. 
+What you'll immediately notice if you don't respect this fact is the food bar textures 
+turning into a random remnant of your texture (or perhaps dissapearing depending on your texture contents)
  
- # TODO
+# TODO
 Filled everything in for now. Will add more as development continues.
