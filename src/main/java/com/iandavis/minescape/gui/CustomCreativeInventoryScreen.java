@@ -6,8 +6,11 @@ import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 
 import java.io.IOException;
+
+import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
 public class CustomCreativeInventoryScreen extends GuiContainerCreative {
     private final SkillsTabScreen skillsTabScreen;
@@ -31,6 +34,11 @@ public class CustomCreativeInventoryScreen extends GuiContainerCreative {
                 168, // tex y
                 0, // hover tex y
                 new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png"));
+
+        if (Loader.isModLoaded("Inventory Tweaks")) {
+            logger.info("InventoryTweaks discovered, offsetting skills tab button by 5 pixels");
+            skillsButton.x -= 15;
+        }
         buttonList.add(skillsButton);
     }
 
