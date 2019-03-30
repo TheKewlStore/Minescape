@@ -1,6 +1,8 @@
 package com.iandavis.minescape.proxy;
 
-import com.iandavis.minescape.gui.MenuInterfaceOverride;
+import com.iandavis.minescape.gui.CustomCreativeInventoryScreen;
+import com.iandavis.minescape.gui.CustomInventoryScreen;
+import com.iandavis.minescape.gui.SkillsTabScreen;
 import com.iandavis.minescape.gui.SkillBarHUD;
 import com.iandavis.minescape.network.*;
 import com.iandavis.minescape.skills.ISkill;
@@ -80,9 +82,18 @@ public class ClientProxy implements Proxy {
                 return;
             }
 
-            event.setGui(new MenuInterfaceOverride(Minecraft.getMinecraft().player));
+            event.setGui(new CustomInventoryScreen(Minecraft.getMinecraft().player));
         } else if (event.getGui() instanceof GuiContainerCreative) {
             // TODO: Handle create gui interface override.
+            if (Minecraft.getMinecraft() == null) {
+                logger.warn("mc was null!");
+                return;
+            } else if (Minecraft.getMinecraft().player == null) {
+                logger.warn("mc.player was null!");
+                return;
+            }
+
+            event.setGui(new CustomCreativeInventoryScreen(Minecraft.getMinecraft().player));
         }
     }
 

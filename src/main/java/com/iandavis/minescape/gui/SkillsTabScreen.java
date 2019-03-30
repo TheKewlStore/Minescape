@@ -5,11 +5,11 @@ import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;
 import com.iandavis.minescape.skills.SkillIcon;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;
-import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
@@ -18,31 +18,36 @@ import java.util.List;
 
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
-public class MenuInterfaceOverride extends GuiInventory {
+public class SkillsTabScreen extends GuiScreen {
     private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png");
-    private GuiButton skillsButton;
-    private boolean skillsTabActive = false;
     private List<String> skillNameIndices = new ArrayList<>();
+    private GuiButton backButton;
     private ISkill activeSkillDisplay = null;
+    private GuiScreen previousScreen;
 
-    private enum ButtonIDs {
-        SkillsButton
+    protected int guiLeft;
+    protected int guiTop;
+
+    protected final int xSize = 176;
+    protected final int ySize = 166;
+
+    public enum ButtonIDs {
+        SkillsButton,
+        BackButton
     }
 
-    public MenuInterfaceOverride(EntityPlayer player) {
-        super(player);
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
+    public SkillsTabScreen(GuiScreen previousScreen) {
+        this.previousScreen = previousScreen;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        skillsButton = new GuiButtonImage(
+        this.guiLeft = (this.width - this.xSize) / 2;
+        this.guiTop = (this.height - this.ySize) / 2;
+
+        this.backButton = new GuiButtonImage(
                 ButtonIDs.SkillsButton.ordinal(),
                 this.guiLeft + 155,
                 this.guiTop + 3,
@@ -53,22 +58,11 @@ public class MenuInterfaceOverride extends GuiInventory {
                 0, // hover tex y
                 new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png"));
 
-        this.buttonList.add(skillsButton);
+        buttonList.add(backButton);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        if (skillsTabActive) {
-            skillsButton.displayString = "Back";
-            drawSkillsScreen(mouseX, mouseY, partialTicks);
-        } else {
-            skillsButton.displayString = "Skills";
-            super.drawScreen(mouseX, mouseY, partialTicks);
-        }
-    }
-
-    private void drawSkillsScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
         GlStateManager.pushMatrix();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(SKILLS_TEXTURE);
@@ -130,9 +124,9 @@ public class MenuInterfaceOverride extends GuiInventory {
             }
         }
 
-        skillsButton.drawButton(this.mc, mouseX, mouseY, partialTicks);
-
         GlStateManager.popMatrix();
+
+        backButton.drawButton(mc, mouseX, mouseY, partialTicks);
     }
 
     private void drawSkill(int skillIndex, ISkill skill, Color color) {
@@ -198,12 +192,13 @@ public class MenuInterfaceOverride extends GuiInventory {
 
     @Override
     public void actionPerformed(GuiButton button) throws IOException {
-        if (skillsButton != null && button != skillsButton) {
+        if (button != backButton) {
             super.actionPerformed(button);
             return;
         }
 
-        skillsTabActive = !skillsTabActive;
+        this.onGuiClosed();
+        Minecraft.getMinecraft().displayGuiScreen(previousScreen);
     }
 
     @Override
@@ -212,8 +207,7 @@ public class MenuInterfaceOverride extends GuiInventory {
             return;
         }
 
-        if (skillsTabActive &&
-                mouseX > this.guiLeft + 7 &&
+        if (mouseX > this.guiLeft + 7 &&
                 mouseX < this.guiLeft + 167 &&
                 mouseY > this.guiTop + 17 &&
                 mouseY < this.guiTop + 121) {
