@@ -1,5 +1,7 @@
 Runecraft is based off of the Minecraft Forge API.
 This project is still in very early development.
+You can find an alpha release version here with basic framework support for the attack and digging skill available here:
+https://github.com/TheKewlStore/Minescape/tree/alpha-0.1.2
 
 # Proposed Skills
 * [Digging](docs/skills/Digging.MD)
