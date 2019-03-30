@@ -1,11 +1,8 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.gui.MenuInterfaceOverride;
-import com.iandavis.minescape.gui.Position;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * Define the basic behaviors that all skills in the skill system will expose.

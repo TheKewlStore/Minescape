@@ -1,7 +1,6 @@
 package com.iandavis.minescape.network;
 
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.skills.ISkill;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;

@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class StatsResponseMessage implements IMessage {
-    private ISkillCapability capability;
+    private final ISkillCapability capability;
 
     public StatsResponseMessage() {
         capability = new SkillCapability();

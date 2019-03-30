@@ -8,9 +8,9 @@ import net.minecraft.client.renderer.RenderHelper;
 import javax.annotation.Nonnull;
 
 public class SimpleToastInterface implements IToast {
-    private String title;
-    private String message;
-    private int timeToLive;
+    private final String title;
+    private final String message;
+    private final int timeToLive;
     private long startTime;
     private boolean newToast = true;
 

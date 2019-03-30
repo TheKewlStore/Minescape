@@ -1,8 +1,6 @@
 package com.iandavis.minescape.network;
 
 import com.iandavis.minescape.gui.SimpleToastInterface;
-import com.iandavis.minescape.proxy.ClientProxy;
-import com.iandavis.minescape.skills.ISkillCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
@@ -28,9 +26,6 @@ public class LevelUpHandler implements IMessageHandler<LevelUpMessage, IMessage>
                 new SoundEvent(location), 100, 100));
         Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().getToastGui().add(
                 new SimpleToastInterface(title, body)));
-
-//        ISkillCapability skillCapability = ClientProxy.getSkillCapability();
-//        skillCapability.getSkill(message.getSkillName()).setLevel(message.getNewLevel());
 
         return null;
     }

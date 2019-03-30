@@ -1,10 +1,10 @@
 package com.iandavis.minescape.gui;
 
 public class Color {
-    private int red;
-    private int green;
-    private int blue;
-    private int alpha;
+    private final int red;
+    private final int green;
+    private final int blue;
+    private final int alpha;
 
     public Color(int newRed, int newGreen, int newBlue, int newAlpha) {
         red = newRed;

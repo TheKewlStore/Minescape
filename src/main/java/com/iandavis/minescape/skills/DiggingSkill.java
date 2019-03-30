@@ -1,12 +1,9 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.events.LevelUpEvent;
-import com.iandavis.minescape.events.XPGainEvent;
 import com.iandavis.minescape.gui.Position;
 import com.iandavis.minescape.proxy.ClientProxy;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;

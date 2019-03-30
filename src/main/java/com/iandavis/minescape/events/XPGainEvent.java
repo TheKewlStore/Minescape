@@ -7,9 +7,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import javax.annotation.Nonnull;
 
 public class XPGainEvent extends Event {
-    private ISkill skill;
-    private EntityPlayer player;
-    private int xpGained;
+    private final ISkill skill;
+    private final EntityPlayer player;
+    private final int xpGained;
 
     public XPGainEvent(ISkill skill, EntityPlayer player, int xpGained) {
         this.skill = skill;

@@ -4,10 +4,10 @@ import com.iandavis.minescape.gui.Position;
 import net.minecraft.util.ResourceLocation;
 
 public class SkillIcon {
-    private ResourceLocation textureLocation;
-    private Position textureOffset;
-    private int texWidth;
-    private int texHeight;
+    private final ResourceLocation textureLocation;
+    private final Position textureOffset;
+    private final int texWidth;
+    private final int texHeight;
 
     public SkillIcon(ResourceLocation texture, Position texOffset, int textureWidth, int textureHeight) {
         textureOffset = texOffset;

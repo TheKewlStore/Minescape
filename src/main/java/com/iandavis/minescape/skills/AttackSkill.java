@@ -1,11 +1,8 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.events.LevelUpEvent;
-import com.iandavis.minescape.events.XPGainEvent;
 import com.iandavis.minescape.gui.Position;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 

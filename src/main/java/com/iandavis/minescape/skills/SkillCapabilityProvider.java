@@ -14,7 +14,7 @@ public class SkillCapabilityProvider implements ICapabilitySerializable<NBTBase>
     @CapabilityInject(ISkillCapability.class)
     public static final Capability<ISkillCapability> skill = null;
 
-    private ISkillCapability instance;
+    private final ISkillCapability instance;
 
     public SkillCapabilityProvider() {
         instance = skill.getDefaultInstance();

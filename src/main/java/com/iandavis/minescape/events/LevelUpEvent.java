@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class LevelUpEvent extends Event {
-    private ISkill skill;
-    private EntityPlayer player;
+    private final ISkill skill;
+    private final EntityPlayer player;
 
     public LevelUpEvent(ISkill skill, EntityPlayer player) {
         this.skill = skill;

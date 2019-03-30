@@ -1,6 +1,6 @@
 # FAQ/Knowledge Base
 This file (as mentioned in the readme) is intended to be a list of snags and gotcha's I've run into
-during the development cycle of the Runecraft project. This list is designed for other developers
+during the development cycle of the Minescape project. This list is designed for other developers
 and as such will be written under the assumption that you understand or can look up any references to the
 Minecraft Forge system. No special knowledge of undocumented systems will be expected as that is the intention
 of this document.

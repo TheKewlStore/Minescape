@@ -5,7 +5,6 @@ import com.iandavis.minescape.gui.SkillBarHUD;
 import com.iandavis.minescape.network.*;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;
-import com.iandavis.minescape.skills.SkillCapability;
 import com.iandavis.minescape.skills.SkillCapabilityProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
@@ -23,7 +22,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
-import org.apache.logging.log4j.Logger;
 
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
@@ -84,7 +82,7 @@ public class ClientProxy implements Proxy {
 
             event.setGui(new MenuInterfaceOverride(Minecraft.getMinecraft().player));
         } else if (event.getGui() instanceof GuiContainerCreative) {
-
+            // TODO: Handle create gui interface override.
         }
     }
 
