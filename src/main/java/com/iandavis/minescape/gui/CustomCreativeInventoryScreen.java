@@ -39,6 +39,7 @@ public class CustomCreativeInventoryScreen extends GuiContainerCreative {
             logger.info("InventoryTweaks discovered, offsetting skills tab button by 5 pixels");
             skillsButton.x -= 15;
         }
+
         buttonList.add(skillsButton);
     }
 
