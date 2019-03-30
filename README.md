@@ -2,7 +2,7 @@ Runecraft is based off of the Minecraft Forge API.
 This project is still in very early development.
 
 # Proposed Skills
-* [Digging](Digging.MD)
+* [Digging](docs/skills/Digging.MD)
 * Mining
 * Farming
 * Fishing
@@ -46,4 +46,4 @@ and the lacking amount of documentation on the Forge project.
 Therefore, I have decided to compile a FAQ/List of different problems I've solved along the way including an explanation
  of the issue and an explanation of the solution in a way that could be extended to any other problems similar.
  
-This list will be maintained in the [FAQ file](FAQ.md)
+This list will be maintained in the [FAQ file](docs/FAQ.md)
