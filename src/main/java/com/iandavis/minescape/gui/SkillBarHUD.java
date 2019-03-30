@@ -1,7 +1,7 @@
 package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
-import com.iandavis.minescape.proxy.ClientProxy;
+import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -32,7 +32,7 @@ public class SkillBarHUD extends Gui {
         int yPos = resolution.getScaledHeight() - GuiIngameForge.left_height;
         GuiIngameForge.left_height += 16;
 
-        ISkill activeSkill = ClientProxy.getActivelyTrainedSkill();
+        ISkill activeSkill = CommonProxy.getActivelyTrainedSkill();
 
         if (activeSkill == null) {
             return;
@@ -53,8 +53,10 @@ public class SkillBarHUD extends Gui {
 
         drawTexturedModalRect(xPos, yPos, 177, 0, 54, 6);
 
+        int xpStartValue = activeSkill.xpForLevel(activeSkill.getLevel());
         int xpForNextLevel = activeSkill.getXP() + activeSkill.xpToNextLevel();
-        int xpBarWidth = (int)(((float) activeSkill.getXP() / xpForNextLevel) * 48);
+        float levelUpProgress = ((float) activeSkill.getXP() - xpStartValue) / (xpForNextLevel - xpStartValue);
+        int xpBarWidth = (int) (levelUpProgress * 48.0f);
 
         drawTexturedModalRect(xPos + 3, yPos + 2, 180, 7, xpBarWidth, 3);
         String s = String.format("XP: %d / %d", activeSkill.getXP(), xpForNextLevel);

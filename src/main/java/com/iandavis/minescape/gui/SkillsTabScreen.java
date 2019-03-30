@@ -1,7 +1,7 @@
 package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
-import com.iandavis.minescape.proxy.ClientProxy;
+import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;
 import com.iandavis.minescape.skills.SkillIcon;
@@ -23,7 +23,7 @@ public class SkillsTabScreen extends GuiScreen {
     private List<String> skillNameIndices = new ArrayList<>();
     private GuiButton backButton;
     private ISkill activeSkillDisplay = null;
-    private GuiScreen previousScreen;
+    private final GuiScreen previousScreen;
 
     protected int guiLeft;
     protected int guiTop;
@@ -76,10 +76,10 @@ public class SkillsTabScreen extends GuiScreen {
 
         Color white = new Color(255, 255, 255, 255);
 
-        ISkillCapability skillCapability = ClientProxy.getSkillCapability();
+        ISkillCapability skillCapability = CommonProxy.getSkillCapability();
 
-        if (ClientProxy.getSkillCapability() == null) {
-            ClientProxy.updateSkillCapability();
+        if (CommonProxy.getSkillCapability() == null) {
+            CommonProxy.updateSkillCapability();
             super.drawCenteredString(this.mc.fontRenderer,
                     "Loading Player Stats",
                     this.guiLeft + 87,
@@ -214,7 +214,7 @@ public class SkillsTabScreen extends GuiScreen {
             int row = (int) ((mouseY - this.guiTop - 17) / 14.0f);
             int column = (int) ((mouseX - this.guiLeft - 7) / 53.0f);
             int skillIndex = (row * 3) + column;
-            ISkillCapability skillCapability = ClientProxy.getSkillCapability();
+            ISkillCapability skillCapability = CommonProxy.getSkillCapability();
 
             if (skillIndex > skillNameIndices.size() - 1) {
                 logger.warn(String.format("No Skill definition exists for skills page index %d", skillIndex));

@@ -1,12 +1,15 @@
 package com.iandavis.minescape.commands;
 
 import com.iandavis.minescape.events.LevelUpEvent;
+import com.iandavis.minescape.network.LevelSetMessage;
+import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;
 import com.iandavis.minescape.skills.SkillCapabilityProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,7 +48,9 @@ public class SetLevelCommand extends CommandBase {
                                     "Set level in %s to %d", args[0], newLevel)));
 
             try {
-                LevelUpEvent levelUpEvent = new LevelUpEvent(skillCapability.getSkill(args[0]), getCommandSenderAsPlayer(sender));
+                EntityPlayerMP player = getCommandSenderAsPlayer(sender);
+                CommonProxy.networkWrapper.sendTo(new LevelSetMessage(args[0], newLevel), player);
+                LevelUpEvent levelUpEvent = new LevelUpEvent(skillCapability.getSkill(args[0]), player);
                 MinecraftForge.EVENT_BUS.post(levelUpEvent);
             } catch (PlayerNotFoundException e) {
                 logger.error("Failed to find player attached to sender entity: " + sender.getName(), e);

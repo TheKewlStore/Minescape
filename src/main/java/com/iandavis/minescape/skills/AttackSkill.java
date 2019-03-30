@@ -23,7 +23,7 @@ public class AttackSkill extends BasicSkill {
         } else if (getLevel() < 50) {
             texturePath = "minecraft:textures/items/iron_sword.png";
         } else if (getLevel() < 70) {
-            texturePath = "minecraft:textures/items/golden_sword.png";
+            texturePath = "minecraft:textures/items/gold_sword.png";
         } else {
             texturePath = "minecraft:textures/items/diamond_sword.png";
         }

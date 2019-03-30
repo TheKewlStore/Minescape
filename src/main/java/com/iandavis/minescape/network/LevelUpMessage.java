@@ -5,8 +5,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.nio.charset.Charset;
-
 public class LevelUpMessage implements IMessage {
     private String skillName;
     private int level;
@@ -21,15 +19,13 @@ public class LevelUpMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        int skillNameLength = buf.readInt();
-        skillName = buf.readCharSequence(skillNameLength, Charset.defaultCharset()).toString();
+        skillName = NetworkUtils.readStringFromBuffer(buf);
         level = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(skillName.length());
-        buf.writeCharSequence(skillName, Charset.defaultCharset());
+        NetworkUtils.writeStringToBuffer(buf, skillName);
         buf.writeInt(level);
     }
 

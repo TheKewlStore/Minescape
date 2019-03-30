@@ -1,7 +1,7 @@
 package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.gui.Position;
-import com.iandavis.minescape.proxy.ClientProxy;
+import com.iandavis.minescape.proxy.CommonProxy;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -31,7 +31,7 @@ public class DiggingSkill extends BasicSkill {
         } else if (getLevel() < 50) {
             texturePath = "minecraft:textures/items/iron_shovel.png";
         } else if (getLevel() < 70) {
-            texturePath = "minecraft:textures/items/golden_shovel.png";
+            texturePath = "minecraft:textures/items/gold_shovel.png";
         } else {
             texturePath = "minecraft:textures/items/diamond_shovel.png";
         }
@@ -68,10 +68,10 @@ public class DiggingSkill extends BasicSkill {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
         } else {
-            if (ClientProxy.getSkillCapability() == null) {
+            if (CommonProxy.getSkillCapability() == null) {
                 return;
             } else {
-                skill = (DiggingSkill) ClientProxy.getSkillCapability().getSkill("Digging");
+                skill = (DiggingSkill) CommonProxy.getSkillCapability().getSkill("Digging");
             }
         }
 

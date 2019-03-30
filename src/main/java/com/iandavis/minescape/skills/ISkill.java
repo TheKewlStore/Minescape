@@ -56,6 +56,13 @@ public interface ISkill {
 
     /**
      *
+     * @param level The level to check experience requirement for.
+     * @return The required experience to reach the given level.
+     */
+    int xpForLevel(int level);
+
+    /**
+     *
      * @return The name of this skill.
      */
     String getName();
