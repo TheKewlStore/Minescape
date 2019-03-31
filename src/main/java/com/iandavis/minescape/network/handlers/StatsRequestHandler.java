@@ -1,5 +1,7 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.handlers;
 
+import com.iandavis.minescape.network.messages.StatsRequestMessage;
+import com.iandavis.minescape.network.messages.StatsResponseMessage;
 import com.iandavis.minescape.skills.ISkillCapability;
 import com.iandavis.minescape.skills.SkillCapabilityProvider;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

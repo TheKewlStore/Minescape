@@ -1,7 +1,7 @@
 package com.iandavis.minescape.commands;
 
 import com.iandavis.minescape.events.LevelUpEvent;
-import com.iandavis.minescape.network.LevelSetMessage;
+import com.iandavis.minescape.network.messages.LevelSetMessage;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;

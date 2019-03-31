@@ -1,5 +1,6 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.handlers;
 
+import com.iandavis.minescape.network.messages.XPGainMessage;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;

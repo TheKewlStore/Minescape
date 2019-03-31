@@ -1,6 +1,9 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.messages;
 
 import com.iandavis.minescape.proxy.CommonProxy;
+import com.iandavis.minescape.network.MessageID;
+import com.iandavis.minescape.network.NetworkUtils;
+import com.iandavis.minescape.network.handlers.LevelSetHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;

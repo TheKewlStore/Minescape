@@ -1,6 +1,7 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.handlers;
 
 import com.iandavis.minescape.gui.SimpleToastInterface;
+import com.iandavis.minescape.network.messages.LevelUpMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;

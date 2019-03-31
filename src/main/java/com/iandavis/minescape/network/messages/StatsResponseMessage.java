@@ -1,5 +1,7 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.messages;
 
+import com.iandavis.minescape.network.MessageID;
+import com.iandavis.minescape.network.handlers.StatsResponseHandler;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkillCapability;
 import com.iandavis.minescape.skills.SkillCapability;

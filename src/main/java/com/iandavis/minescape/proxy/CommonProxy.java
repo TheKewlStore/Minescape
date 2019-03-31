@@ -4,7 +4,8 @@ import com.iandavis.minescape.MinescapeMain;
 import com.iandavis.minescape.commands.CheckXPCommand;
 import com.iandavis.minescape.commands.SetLevelCommand;
 import com.iandavis.minescape.events.SkillEventHandler;
-import com.iandavis.minescape.network.*;
+import com.iandavis.minescape.network.handlers.StatsResponseHandler;
+import com.iandavis.minescape.network.messages.*;
 import com.iandavis.minescape.skills.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,11 +28,14 @@ public class CommonProxy implements Proxy {
     private static boolean registeredServer = false;
     private static ISkillCapability skillCapability = null;
     private static ISkill activelyTrainedSkill = null;
+    private static RareDropTable rareDropTable;
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         skillStorage = new SkillStorage();
+        rareDropTable = new RareDropTable();
+        rareDropTable.registerDefaultDrops();
     }
 
     @Override
@@ -50,8 +54,10 @@ public class CommonProxy implements Proxy {
 
     @Override
     public void serverStarting(FMLServerStartingEvent event) {
-        if (registeredServer && FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
-            updateSkillCapability();
+        if (registeredServer) {
+            if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+                updateSkillCapability();
+            }
             return;
         }
 
@@ -64,6 +70,7 @@ public class CommonProxy implements Proxy {
         LevelSetMessage.registerServerSide();
         StatsResponseMessage.registerServerSide();
         StatsRequestMessage.registerServerSide();
+        RareDropTableMessage.registerServerSide();
 
         CapabilityManager.INSTANCE.register(ISkillCapability.class, skillStorage, SkillCapability::new);
 
@@ -105,5 +112,9 @@ public class CommonProxy implements Proxy {
     @Override
     public EntityPlayer getPlayerEntityFromContext(MessageContext parContext) {
         return null;
+    }
+
+    public static RareDropTable getRareDropTable() {
+        return rareDropTable;
     }
 }

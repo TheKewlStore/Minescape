@@ -1,5 +1,7 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.messages;
 
+import com.iandavis.minescape.network.MessageID;
+import com.iandavis.minescape.network.handlers.XPGainHandler;
 import com.iandavis.minescape.proxy.CommonProxy;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

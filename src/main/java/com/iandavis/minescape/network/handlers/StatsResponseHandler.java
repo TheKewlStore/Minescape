@@ -1,5 +1,6 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.network.handlers;
 
+import com.iandavis.minescape.network.messages.StatsResponseMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

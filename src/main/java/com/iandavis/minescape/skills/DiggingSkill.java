@@ -2,7 +2,13 @@ package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.gui.Position;
 import com.iandavis.minescape.proxy.CommonProxy;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -43,6 +49,41 @@ public class DiggingSkill extends BasicSkill {
                 16);
     }
 
+    private float getRareDropChance(Item heldItem) {
+        float toolBonus = 0.0f;
+        float levelModifier = 0.10f * ((float) getLevel() / getMaxLevel());
+
+        if (heldItem == Items.WOODEN_SHOVEL) {
+            toolBonus = 0.015f;
+        } else if (heldItem == Items.STONE_SHOVEL) {
+            toolBonus = 0.025f;
+        } else if (heldItem == Items.IRON_SHOVEL) {
+            toolBonus = 0.05f;
+        } else if (heldItem == Items.GOLDEN_SHOVEL) {
+            toolBonus = 0.3f;
+        } else if (heldItem == Items.DIAMOND_SHOVEL) {
+            toolBonus = 0.15f;
+        }
+
+        return toolBonus + levelModifier;
+    }
+
+    private boolean isRelatedBlock(Block block) {
+        return block == Blocks.DIRT || block == Blocks.GRASS || block == Blocks.SAND || block == Blocks.GRAVEL;
+    }
+
+    private int xpForBlock(Block block) {
+        if (block == Blocks.DIRT || block == Blocks.GRASS) {
+            return 10;
+        } else if (block == Blocks.GRAVEL) {
+            return 15;
+        } else if (block == Blocks.SAND) {
+            return 7;
+        }
+
+        return 0;
+    }
+
     private float getDiggingSpeedModifier() {
         return ((((float) getLevel() / getMaxLevel()) * 30.0f) / 10.0f) + 1.0f;
     }
@@ -59,10 +100,6 @@ public class DiggingSkill extends BasicSkill {
             return;
         }
 
-        if (event.getState().getBlock() != Blocks.DIRT && event.getState().getBlock() != Blocks.GRASS) {
-            return;
-        }
-
         DiggingSkill skill;
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
@@ -73,6 +110,10 @@ public class DiggingSkill extends BasicSkill {
             } else {
                 skill = (DiggingSkill) CommonProxy.getSkillCapability().getSkill("Digging");
             }
+        }
+
+        if (!skill.isRelatedBlock(event.getState().getBlock())) {
+            return;
         }
 
         float newBreakSpeed = event.getOriginalSpeed() * skill.getDiggingSpeedModifier();
@@ -94,14 +135,37 @@ public class DiggingSkill extends BasicSkill {
             return;
         }
 
-        logger.info("Received onBreakEvent!");
-
         if (event.getState().getBlock() == Blocks.DIRT || event.getState().getBlock() == Blocks.GRASS) {
-            ISkill skill = getCapabilityFromEvent(event).getSkill("Digging");
+            DiggingSkill skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
 
-            int xpEarned = 10;
+            int xpEarned = skill.xpForBlock(event.getState().getBlock());
 
             skill.gainXP(xpEarned, event.getPlayer());
+        }
+    }
+
+    @SubscribeEvent
+    public static void onHarvestEvent(BlockEvent.HarvestDropsEvent event) {
+        if (event.getHarvester() == null) {
+            return;
+        }
+
+        DiggingSkill skill = (DiggingSkill) getCapabilityFromPlayer(event.getHarvester()).getSkill("Digging");
+        RareDropTable table = CommonProxy.getRareDropTable();
+
+        if (table.shouldGetReward(skill.getRareDropChance(event.getHarvester().getHeldItem(EnumHand.MAIN_HAND).getItem()))) {
+            Drop drop = table.getReward(event.getHarvester());
+            int quantity = drop.getQuantity();
+            int maxStackSize = drop.getItem().getDefaultInstance().getMaxStackSize();
+
+            while (quantity >= maxStackSize) {
+                event.getDrops().add(new ItemStack(drop.getItem(), maxStackSize));
+                quantity -= maxStackSize;
+            }
+
+            if (quantity > 0) {
+                event.getDrops().add(new ItemStack(drop.getItem(), quantity));
+            }
         }
     }
 }
