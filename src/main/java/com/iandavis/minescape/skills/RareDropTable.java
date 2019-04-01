@@ -60,18 +60,18 @@ public class RareDropTable {
     }
 
     public void registerDefaultDrops() {
-        addReward(Item.getItemFromBlock(Blocks.IRON_ORE), 15.0f, 64);
-        addReward(Item.getItemFromBlock(Blocks.NETHER_WART), 1.0f, 8);
-        addReward(Item.getItemFromBlock(Blocks.PLANKS), 15.0f, 64);
-        addReward(Item.getItemFromBlock(Blocks.LAPIS_BLOCK), 1.5f, 16);
-        addReward(Item.getItemFromBlock(Blocks.COAL_ORE), 5.0f, 32);
-        addReward(Item.getItemFromBlock(Blocks.GRASS), 15.0f, 64);
-        addReward(Item.getItemFromBlock(Blocks.GRAVEL), 15.0f, 64);
-        addReward(Item.getItemFromBlock(Blocks.STONE), 15.0f, 64);
+        addReward(Items.NETHER_STAR, 0.00025f, 1);
+        addReward(Items.GOLDEN_APPLE, 0.0007f, 2);
         addReward(Item.getItemFromBlock(Blocks.DIAMOND_BLOCK), 0.05f, 64);
         addReward(Item.getItemFromBlock(Blocks.TNT), 0.05f, 8);
         addReward(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 0.005f, 16);
-        addReward(Items.NETHER_STAR, 0.00025f, 1);
-        addReward(Items.GOLDEN_APPLE, 0.0007f, 2);
+        addReward(Item.getItemFromBlock(Blocks.NETHER_WART), 1.0f, 8);
+        addReward(Item.getItemFromBlock(Blocks.LAPIS_BLOCK), 1.5f, 16);
+        addReward(Item.getItemFromBlock(Blocks.COAL_ORE), 5.0f, 32);
+        addReward(Item.getItemFromBlock(Blocks.IRON_ORE), 15.0f, 64);
+        addReward(Item.getItemFromBlock(Blocks.PLANKS), 15.0f, 64);
+        addReward(Item.getItemFromBlock(Blocks.GRASS), 15.0f, 64);
+        addReward(Item.getItemFromBlock(Blocks.GRAVEL), 15.0f, 64);
+        addReward(Item.getItemFromBlock(Blocks.STONE), 15.0f, 64);
     }
 }
