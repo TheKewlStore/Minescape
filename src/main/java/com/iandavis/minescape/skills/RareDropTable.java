@@ -35,8 +35,9 @@ public class RareDropTable {
         Drop actualDrop = null;
 
         for (Drop drop: rareDropTable) {
-            if (probabilityNumber > drop.getProbabilityCutoff()) {
+            if (probabilityNumber < drop.getProbabilityCutoff()) {
                 actualDrop = drop;
+                break;
             }
         }
 
@@ -60,17 +61,17 @@ public class RareDropTable {
 
     public void registerDefaultDrops() {
         addReward(Item.getItemFromBlock(Blocks.IRON_ORE), 15.0f, 64);
-        addReward(Item.getItemFromBlock(Blocks.DIAMOND_BLOCK), 1.25f, 64);
         addReward(Item.getItemFromBlock(Blocks.NETHER_WART), 1.0f, 8);
-        addReward(Item.getItemFromBlock(Blocks.TNT), 0.238f, 8);
         addReward(Item.getItemFromBlock(Blocks.PLANKS), 15.0f, 64);
-        addReward(Item.getItemFromBlock(Blocks.LAPIS_BLOCK), 5.0f, 16);
-        addReward(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 2.5f, 16);
-        addReward(Item.getItemFromBlock(Blocks.COAL_ORE), 15.0f, 32);
+        addReward(Item.getItemFromBlock(Blocks.LAPIS_BLOCK), 1.5f, 16);
+        addReward(Item.getItemFromBlock(Blocks.COAL_ORE), 5.0f, 32);
         addReward(Item.getItemFromBlock(Blocks.GRASS), 15.0f, 64);
         addReward(Item.getItemFromBlock(Blocks.GRAVEL), 15.0f, 64);
         addReward(Item.getItemFromBlock(Blocks.STONE), 15.0f, 64);
-        addReward(Items.NETHER_STAR, 0.0007f, 1);
-        addReward(Items.GOLDEN_APPLE, 0.005f, 2);
+        addReward(Item.getItemFromBlock(Blocks.DIAMOND_BLOCK), 0.05f, 64);
+        addReward(Item.getItemFromBlock(Blocks.TNT), 0.05f, 8);
+        addReward(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 0.005f, 16);
+        addReward(Items.NETHER_STAR, 0.00025f, 1);
+        addReward(Items.GOLDEN_APPLE, 0.0007f, 2);
     }
 }

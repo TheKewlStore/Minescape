@@ -53,15 +53,15 @@ public class DiggingSkill extends BasicSkill {
         float levelModifier = 0.10f * ((float) getLevel() / getMaxLevel());
 
         if (heldItem == Items.WOODEN_SHOVEL) {
-            toolBonus = 0.015f;
+            toolBonus = 0.005f;
         } else if (heldItem == Items.STONE_SHOVEL) {
-            toolBonus = 0.025f;
+            toolBonus = 0.01f;
         } else if (heldItem == Items.IRON_SHOVEL) {
-            toolBonus = 0.05f;
+            toolBonus = 0.025f;
         } else if (heldItem == Items.GOLDEN_SHOVEL) {
-            toolBonus = 0.3f;
-        } else if (heldItem == Items.DIAMOND_SHOVEL) {
             toolBonus = 0.15f;
+        } else if (heldItem == Items.DIAMOND_SHOVEL) {
+            toolBonus = 0.1f;
         }
 
         return toolBonus + levelModifier;
