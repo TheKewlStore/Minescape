@@ -81,7 +81,6 @@ public class ClientProxy implements Proxy {
 
             event.setGui(new CustomInventoryScreen(Minecraft.getMinecraft().player));
         } else if (event.getGui() instanceof GuiContainerCreative) {
-            // TODO: Handle create gui interface override.
             if (Minecraft.getMinecraft() == null) {
                 logger.warn("mc was null!");
                 return;

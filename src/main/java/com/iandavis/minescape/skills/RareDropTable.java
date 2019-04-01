@@ -47,7 +47,7 @@ public class RareDropTable {
             logger.info(String.format("Probability roll of %f means dropping item %s", probabilityNumber, actualDrop.getItem().getUnlocalizedName()));
         }
 
-        RareDropTableEvent event = new RareDropTableEvent(actualDrop.getItem().getUnlocalizedName(), actualDrop.getQuantity(), player);
+        RareDropTableEvent event = new RareDropTableEvent(actualDrop.getItem().delegate.name(), actualDrop.getQuantity(), player);
         MinecraftForge.EVENT_BUS.post(event);
 
         return actualDrop;

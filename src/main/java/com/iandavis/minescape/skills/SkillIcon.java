@@ -1,6 +1,6 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.gui.Position;
+import com.iandavis.minescape.gui.utils.Position;
 import net.minecraft.util.ResourceLocation;
 
 public class SkillIcon {

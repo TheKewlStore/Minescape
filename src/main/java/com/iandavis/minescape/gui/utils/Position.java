@@ -1,4 +1,4 @@
-package com.iandavis.minescape.gui;
+package com.iandavis.minescape.gui.utils;
 
 public class Position {
     private float x;

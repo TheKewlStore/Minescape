@@ -1,6 +1,7 @@
 package com.iandavis.minescape.network.handlers;
 
-import com.iandavis.minescape.gui.SimpleToastInterface;
+import com.iandavis.minescape.gui.toast.LevelUpToast;
+import com.iandavis.minescape.gui.toast.SimpleToastInterface;
 import com.iandavis.minescape.network.messages.LevelUpMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -15,18 +16,13 @@ public class LevelUpHandler implements IMessageHandler<LevelUpMessage, IMessage>
 
     @Override
     public IMessage onMessage(LevelUpMessage message, MessageContext ctx) {
-        String title = String.format(
-                "Gained %s level!",
-                message.getSkillName());
-        String body = String.format(
-                "Current level: %d",
-                message.getNewLevel());
+
         ResourceLocation location = new ResourceLocation("minecraft", "entity.player.levelup");
 
         Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().player.playSound(
                 new SoundEvent(location), 100, 100));
         Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().getToastGui().add(
-                new SimpleToastInterface(title, body)));
+                new LevelUpToast(message.getSkillIcon(), message.getSkillName(), message.getNewLevel())));
 
         return null;
     }

@@ -5,19 +5,19 @@ import com.iandavis.minescape.network.NetworkUtils;
 import com.iandavis.minescape.network.handlers.RareDropTableHandler;
 import com.iandavis.minescape.proxy.CommonProxy;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class RareDropTableMessage implements IMessage {
-    private String itemName;
+    private ResourceLocation location;
     private int quantity;
 
     public RareDropTableMessage() {
     }
 
-    public RareDropTableMessage(String itemName, int quantity) {
-        this();
-        this.itemName = itemName;
+    public RareDropTableMessage(ResourceLocation location, int quantity) {
+        this.location = location;
         this.quantity = quantity;
     }
 
@@ -39,18 +39,18 @@ public class RareDropTableMessage implements IMessage {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        itemName = NetworkUtils.readStringFromBuffer(buf);
+        location = NetworkUtils.readResourceFromBuffer(buf);
         quantity = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkUtils.writeStringToBuffer(buf, itemName);
+        NetworkUtils.writeResourceToBuffer(buf, location);
         buf.writeInt(quantity);
     }
 
-    public String getItemName() {
-        return itemName;
+    public ResourceLocation getLocation() {
+        return location;
     }
 
     public int getQuantity() {

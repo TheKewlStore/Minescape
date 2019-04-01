@@ -1,9 +1,8 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.gui.Position;
+import com.iandavis.minescape.gui.utils.Position;
 import com.iandavis.minescape.proxy.CommonProxy;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;

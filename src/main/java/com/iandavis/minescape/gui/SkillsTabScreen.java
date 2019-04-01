@@ -1,6 +1,8 @@
 package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
+import com.iandavis.minescape.gui.utils.Color;
+import com.iandavis.minescape.gui.utils.Position;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
 import com.iandavis.minescape.skills.ISkillCapability;
