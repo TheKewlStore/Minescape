@@ -50,18 +50,18 @@ public class DiggingSkill extends BasicSkill {
 
     private float getRareDropChance(Item heldItem) {
         float toolBonus = 0.0f;
-        float levelModifier = 0.10f * ((float) getLevel() / getMaxLevel());
+        float levelModifier = 0.05f * ((float) getLevel() / getMaxLevel());
 
         if (heldItem == Items.WOODEN_SHOVEL) {
-            toolBonus = 0.005f;
+            toolBonus = 0.0001f;
         } else if (heldItem == Items.STONE_SHOVEL) {
-            toolBonus = 0.01f;
+            toolBonus = 0.005f;
         } else if (heldItem == Items.IRON_SHOVEL) {
-            toolBonus = 0.025f;
+            toolBonus = 0.01f;
         } else if (heldItem == Items.GOLDEN_SHOVEL) {
-            toolBonus = 0.15f;
+            toolBonus = 0.05f;
         } else if (heldItem == Items.DIAMOND_SHOVEL) {
-            toolBonus = 0.1f;
+            toolBonus = 0.025f;
         }
 
         return toolBonus + levelModifier;

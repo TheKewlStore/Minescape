@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -57,6 +58,7 @@ public class RareDropTable {
     public void addReward(Item item, Float chance, int quantity) {
         currentProbabilityMax += chance;
         rareDropTable.add(new Drop(item, quantity, currentProbabilityMax));
+        rareDropTable.sort(Comparator.comparingInt(Drop::getQuantity));
     }
 
     public void registerDefaultDrops() {
