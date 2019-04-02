@@ -1,7 +1,9 @@
 package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.gui.utils.Position;
+import com.iandavis.minescape.items.MinescapeItems;
 import com.iandavis.minescape.proxy.CommonProxy;
+import com.iandavis.minescape.skills.capes.SkillCapeBauble;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -46,6 +48,11 @@ public class DiggingSkill extends BasicSkill {
                 new Position(0, 0),
                 16,
                 16);
+    }
+
+    @Override
+    public SkillCapeBauble getSkillCape() {
+        return MinescapeItems.diggingSkillCape;
     }
 
     private float getRareDropChance(Item heldItem) {
@@ -116,6 +123,11 @@ public class DiggingSkill extends BasicSkill {
         }
 
         float newBreakSpeed = event.getOriginalSpeed() * skill.getDiggingSpeedModifier();
+
+        if (skill.getSkillCape().isEquipped(event.getEntityPlayer())) {
+            logger.info("Player that broke a block has the digging cape equipped!");
+            newBreakSpeed *= 10;
+        }
 
         logger.debug(String.format(
                 "Original breaking speed is: %f",

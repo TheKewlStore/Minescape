@@ -1,5 +1,6 @@
 package com.iandavis.minescape.events;
 
+import com.iandavis.minescape.items.MinescapeItems;
 import com.iandavis.minescape.network.messages.LevelUpMessage;
 import com.iandavis.minescape.network.messages.RareDropTableMessage;
 import com.iandavis.minescape.network.messages.XPGainMessage;
@@ -17,6 +18,7 @@ public class SkillEventHandler {
 
     @SubscribeEvent
     public static void onLevelUp(LevelUpEvent event) {
+        event.getPlayer().inventory.addItemStackToInventory(MinescapeItems.diggingSkillCape.getDefaultInstance());
         CommonProxy.networkWrapper.sendTo(
                 new LevelUpMessage(
                         event.getSkill().getName(),

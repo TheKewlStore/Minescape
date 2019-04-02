@@ -40,6 +40,7 @@ public class LevelSetMessage implements IMessage {
     @Override
     public void fromBytes(ByteBuf buf) {
         this.skillName = NetworkUtils.readStringFromBuffer(buf);
+        this.newLevel = buf.readInt();
     }
 
     @Override

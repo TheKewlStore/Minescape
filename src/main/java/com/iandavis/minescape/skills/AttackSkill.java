@@ -1,6 +1,7 @@
 package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.gui.utils.Position;
+import com.iandavis.minescape.skills.capes.SkillCapeBauble;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -33,6 +34,11 @@ public class AttackSkill extends BasicSkill {
                 new Position(0,0),
                 16,
                 16);
+    }
+
+    @Override
+    public SkillCapeBauble getSkillCape() {
+        return null;
     }
 
     @SubscribeEvent

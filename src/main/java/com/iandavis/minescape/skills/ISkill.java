@@ -1,5 +1,6 @@
 package com.iandavis.minescape.skills;
 
+import com.iandavis.minescape.skills.capes.SkillCapeBauble;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -91,4 +92,6 @@ public interface ISkill {
     void deserializePacket(ByteBuf buf);
 
     SkillIcon getSkillIcon();
+
+    SkillCapeBauble getSkillCape();
 }

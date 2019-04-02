@@ -1,1 +1,2 @@
-runecraft.levelup=Leveled Up %s! Current level is: %d
+minescape.levelup=Leveled Up %s! Current level is: %d
+item.digging_skill_cape.name=Digging Cape

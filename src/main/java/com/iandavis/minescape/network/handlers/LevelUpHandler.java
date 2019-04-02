@@ -1,7 +1,6 @@
 package com.iandavis.minescape.network.handlers;
 
 import com.iandavis.minescape.gui.toast.LevelUpToast;
-import com.iandavis.minescape.gui.toast.SimpleToastInterface;
 import com.iandavis.minescape.network.messages.LevelUpMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +15,6 @@ public class LevelUpHandler implements IMessageHandler<LevelUpMessage, IMessage>
 
     @Override
     public IMessage onMessage(LevelUpMessage message, MessageContext ctx) {
-
         ResourceLocation location = new ResourceLocation("minecraft", "entity.player.levelup");
 
         Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().player.playSound(

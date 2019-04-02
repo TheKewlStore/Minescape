@@ -64,9 +64,9 @@ public class RareDropTable {
     public void registerDefaultDrops() {
         addReward(Items.NETHER_STAR, 0.00025f, 1);
         addReward(Items.GOLDEN_APPLE, 0.0007f, 2);
+        addReward(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 0.005f, 16);
         addReward(Item.getItemFromBlock(Blocks.DIAMOND_BLOCK), 0.05f, 64);
         addReward(Item.getItemFromBlock(Blocks.TNT), 0.05f, 8);
-        addReward(Item.getItemFromBlock(Blocks.GOLD_BLOCK), 0.005f, 16);
         addReward(Item.getItemFromBlock(Blocks.NETHER_WART), 1.0f, 8);
         addReward(Item.getItemFromBlock(Blocks.LAPIS_BLOCK), 1.5f, 16);
         addReward(Item.getItemFromBlock(Blocks.COAL_ORE), 5.0f, 32);

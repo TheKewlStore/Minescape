@@ -1,8 +1,8 @@
 [
 {
-  "modid": "runecraft",
-  "name": "Runecraft 0.1",
-  "description": "Runecraft description.",
+  "modid": "minescape",
+  "name": "Minescape 0.1.4",
+  "description": "Minescape description.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
