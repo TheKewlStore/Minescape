@@ -1,8 +1,8 @@
 package com.iandavis.minescape.commands;
 
 import com.iandavis.minescape.skills.ISkill;
-import com.iandavis.minescape.skills.ISkillCapability;
-import com.iandavis.minescape.skills.SkillCapabilityProvider;
+import com.iandavis.minescape.skills.capability.ISkillCapability;
+import com.iandavis.minescape.skills.capability.SkillCapabilityProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;

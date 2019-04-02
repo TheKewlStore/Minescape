@@ -2,6 +2,8 @@ package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.events.LevelUpEvent;
 import com.iandavis.minescape.events.XPGainEvent;
+import com.iandavis.minescape.skills.capability.ISkillCapability;
+import com.iandavis.minescape.skills.capability.SkillCapabilityProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

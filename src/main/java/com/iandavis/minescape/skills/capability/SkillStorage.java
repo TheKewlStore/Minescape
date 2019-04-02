@@ -1,5 +1,6 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.skills.capability;
 
+import com.iandavis.minescape.skills.ISkill;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;

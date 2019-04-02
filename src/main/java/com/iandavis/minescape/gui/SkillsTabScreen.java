@@ -5,7 +5,7 @@ import com.iandavis.minescape.gui.utils.Color;
 import com.iandavis.minescape.gui.utils.Position;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.ISkill;
-import com.iandavis.minescape.skills.ISkillCapability;
+import com.iandavis.minescape.skills.capability.ISkillCapability;
 import com.iandavis.minescape.skills.SkillIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

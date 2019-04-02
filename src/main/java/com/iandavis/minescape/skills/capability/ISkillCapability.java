@@ -1,5 +1,6 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.skills.capability;
 
+import com.iandavis.minescape.skills.ISkill;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Map;

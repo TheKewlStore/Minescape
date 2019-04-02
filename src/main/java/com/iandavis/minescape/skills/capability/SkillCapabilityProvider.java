@@ -1,4 +1,4 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.skills.capability;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.util.EnumFacing;

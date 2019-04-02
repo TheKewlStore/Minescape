@@ -1,4 +1,4 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.items;
 
 import com.iandavis.minescape.events.RareDropTableEvent;
 import net.minecraft.entity.player.EntityPlayer;

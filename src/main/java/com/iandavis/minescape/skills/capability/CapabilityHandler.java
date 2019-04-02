@@ -1,4 +1,4 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.skills.capability;
 
 import com.iandavis.minescape.MinescapeMain;
 import net.minecraft.entity.Entity;

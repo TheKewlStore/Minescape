@@ -4,6 +4,8 @@ import com.iandavis.minescape.gui.utils.Position;
 import com.iandavis.minescape.items.MinescapeItems;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.items.Drop;
+import com.iandavis.minescape.items.RareDropTable;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

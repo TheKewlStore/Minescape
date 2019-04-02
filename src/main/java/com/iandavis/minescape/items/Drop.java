@@ -1,4 +1,4 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.items;
 
 import net.minecraft.item.Item;
 

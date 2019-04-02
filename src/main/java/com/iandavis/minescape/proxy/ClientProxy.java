@@ -5,7 +5,7 @@ import com.iandavis.minescape.gui.CustomInventoryScreen;
 import com.iandavis.minescape.gui.SkillBarHUD;
 import com.iandavis.minescape.network.handlers.StatsResponseHandler;
 import com.iandavis.minescape.network.messages.*;
-import com.iandavis.minescape.skills.SkillCapabilityProvider;
+import com.iandavis.minescape.skills.capability.SkillCapabilityProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
