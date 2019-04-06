@@ -1,4 +1,4 @@
-package com.iandavis.minescape.events;
+package com.iandavis.minescape.api.events;
 
 import com.iandavis.minescape.api.skills.ISkill;
 import net.minecraft.entity.player.EntityPlayer;

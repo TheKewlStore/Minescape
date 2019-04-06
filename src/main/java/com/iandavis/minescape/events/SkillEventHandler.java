@@ -1,5 +1,8 @@
 package com.iandavis.minescape.events;
 
+import com.iandavis.minescape.api.events.LevelUpEvent;
+import com.iandavis.minescape.api.events.RareDropTableEvent;
+import com.iandavis.minescape.api.events.XPGainEvent;
 import com.iandavis.minescape.items.MinescapeItems;
 import com.iandavis.minescape.network.messages.LevelUpMessage;
 import com.iandavis.minescape.network.messages.RareDropTableMessage;

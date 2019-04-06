@@ -1,6 +1,6 @@
 package com.iandavis.minescape.items;
 
-import com.iandavis.minescape.events.RareDropTableEvent;
+import com.iandavis.minescape.api.events.RareDropTableEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

@@ -1,4 +1,4 @@
-package com.iandavis.minescape.events;
+package com.iandavis.minescape.api.events;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

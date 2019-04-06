@@ -2,8 +2,8 @@ package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.api.skills.ISkill;
 import com.iandavis.minescape.capability.skill.CapabilitySkills;
-import com.iandavis.minescape.events.LevelUpEvent;
-import com.iandavis.minescape.events.XPGainEvent;
+import com.iandavis.minescape.api.events.LevelUpEvent;
+import com.iandavis.minescape.api.events.XPGainEvent;
 import com.iandavis.minescape.api.capability.ISkillContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
