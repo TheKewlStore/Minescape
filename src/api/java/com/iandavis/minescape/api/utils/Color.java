@@ -1,4 +1,4 @@
-package com.iandavis.minescape.gui.utils;
+package com.iandavis.minescape.api.utils;
 
 public class Color {
     private final int red;

@@ -1,8 +1,8 @@
 package com.iandavis.minescape.commands;
 
-import com.iandavis.minescape.skills.ISkill;
-import com.iandavis.minescape.skills.capability.ISkillCapability;
-import com.iandavis.minescape.skills.capability.SkillCapabilityProvider;
+import com.iandavis.minescape.capability.skill.CapabilitySkills;
+import com.iandavis.minescape.api.capability.ISkillContainer;
+import com.iandavis.minescape.api.skills.ISkill;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -25,7 +25,8 @@ public class CheckXPCommand extends CommandBase {
 
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) {
-        ISkillCapability skillCapability = (sender.getCommandSenderEntity()).getCapability(SkillCapabilityProvider.skill, null);
+        ISkillContainer skillCapability = (sender.getCommandSenderEntity()).getCapability(
+                CapabilitySkills.getSkillCapability(), null);
         ISkill skill = skillCapability.getSkill(args[0]);
 
         if (skill == null) {

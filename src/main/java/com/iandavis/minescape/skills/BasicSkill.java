@@ -1,9 +1,10 @@
 package com.iandavis.minescape.skills;
 
+import com.iandavis.minescape.api.skills.ISkill;
+import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import com.iandavis.minescape.events.LevelUpEvent;
 import com.iandavis.minescape.events.XPGainEvent;
-import com.iandavis.minescape.skills.capability.ISkillCapability;
-import com.iandavis.minescape.skills.capability.SkillCapabilityProvider;
+import com.iandavis.minescape.api.capability.ISkillContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -131,26 +132,26 @@ public abstract class BasicSkill implements ISkill {
         currentXP = buf.readInt();
     }
 
-    public static ISkillCapability getCapabilityFromPlayer(EntityPlayer player) {
-        return player.getCapability(SkillCapabilityProvider.skill, null);
+    public static ISkillContainer getCapabilityFromPlayer(EntityPlayer player) {
+        return player.getCapability(CapabilitySkills.getSkillCapability(), null);
     }
 
-    public static ISkillCapability getCapabilityFromEvent(BlockEvent.BreakEvent event) {
+    public static ISkillContainer getCapabilityFromEvent(BlockEvent.BreakEvent event) {
         return getCapabilityFromPlayer(event.getPlayer());
     }
 
-    public static ISkillCapability getCapabilityFromEvent(PlayerEvent event) {
+    public static ISkillContainer getCapabilityFromEvent(PlayerEvent event) {
         return getCapabilityFromPlayer(event.getEntityPlayer());
     }
 
-    public static ISkillCapability getCapabilityFromEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent event) {
+    public static ISkillContainer getCapabilityFromEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent event) {
         return getCapabilityFromPlayer(event.player);
     }
 
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.Clone event) {
-        ISkillCapability oldCapability = getCapabilityFromPlayer(event.getOriginal());
-        ISkillCapability newCapability = getCapabilityFromEvent(event);
+        ISkillContainer oldCapability = getCapabilityFromPlayer(event.getOriginal());
+        ISkillContainer newCapability = getCapabilityFromEvent(event);
         newCapability.setAllSkills(oldCapability.getAllSkills());
     }
 }

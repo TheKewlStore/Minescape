@@ -1,9 +1,11 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.gui.utils.Position;
+import com.iandavis.minescape.api.skills.SkillIcon;
+import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.items.MinescapeItems;
+import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import com.iandavis.minescape.items.Drop;
 import com.iandavis.minescape.items.RareDropTable;
 import net.minecraft.block.Block;
@@ -113,10 +115,10 @@ public class DiggingSkill extends BasicSkill {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
             skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
         } else {
-            if (CommonProxy.getSkillCapability() == null) {
+            if (ClientProxy.getSkillCapability() == null) {
                 return;
             } else {
-                skill = (DiggingSkill) CommonProxy.getSkillCapability().getSkill("Digging");
+                skill = (DiggingSkill) ClientProxy.getSkillCapability().getSkill("Digging");
             }
         }
 

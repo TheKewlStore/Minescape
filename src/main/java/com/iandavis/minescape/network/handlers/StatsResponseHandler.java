@@ -1,6 +1,7 @@
 package com.iandavis.minescape.network.handlers;
 
 import com.iandavis.minescape.network.messages.StatsResponseMessage;
+import com.iandavis.minescape.proxy.CommonProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -12,10 +13,9 @@ import java.util.function.BiConsumer;
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
 public class StatsResponseHandler implements IMessageHandler<StatsResponseMessage, StatsResponseMessage> {
-
     private final static Set<BiConsumer<StatsResponseMessage, MessageContext>> currentListeners = new HashSet<>();
 
-    public static void registerSingleShotListener(BiConsumer<StatsResponseMessage, MessageContext> listener) {
+    public static void registerListener(BiConsumer<StatsResponseMessage, MessageContext> listener) {
         currentListeners.add(listener);
     }
 
@@ -27,7 +27,6 @@ public class StatsResponseHandler implements IMessageHandler<StatsResponseMessag
             Minecraft.getMinecraft().addScheduledTask(() -> listener.accept(message, ctx));
         }
 
-        currentListeners.clear();
         return null;
     }
 }

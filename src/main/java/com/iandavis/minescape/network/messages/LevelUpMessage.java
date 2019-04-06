@@ -4,9 +4,8 @@ import com.iandavis.minescape.network.MessageID;
 import com.iandavis.minescape.network.NetworkUtils;
 import com.iandavis.minescape.network.handlers.LevelUpHandler;
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.skills.SkillIcon;
+import com.iandavis.minescape.api.skills.SkillIcon;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 

@@ -1,7 +1,7 @@
 package com.iandavis.minescape.network;
 
-import com.iandavis.minescape.gui.utils.Position;
-import com.iandavis.minescape.skills.SkillIcon;
+import com.iandavis.minescape.api.utils.Position;
+import com.iandavis.minescape.api.skills.SkillIcon;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
 

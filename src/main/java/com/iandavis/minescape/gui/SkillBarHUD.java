@@ -1,9 +1,10 @@
 package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
-import com.iandavis.minescape.gui.utils.Color;
+import com.iandavis.minescape.api.utils.Color;
+import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.skills.ISkill;
+import com.iandavis.minescape.api.skills.ISkill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -11,9 +12,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class SkillBarHUD extends Gui {
     private final ResourceLocation texture = new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png");
 
@@ -33,7 +36,7 @@ public class SkillBarHUD extends Gui {
         int yPos = resolution.getScaledHeight() - GuiIngameForge.left_height;
         GuiIngameForge.left_height += 16;
 
-        ISkill activeSkill = CommonProxy.getActivelyTrainedSkill();
+        ISkill activeSkill = ClientProxy.getActivelyTrainedSkill();
 
         if (activeSkill == null) {
             return;

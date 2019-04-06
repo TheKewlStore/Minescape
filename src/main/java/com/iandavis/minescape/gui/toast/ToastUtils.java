@@ -1,6 +1,6 @@
 package com.iandavis.minescape.gui.toast;
 
-import com.iandavis.minescape.skills.SkillIcon;
+import com.iandavis.minescape.api.skills.SkillIcon;
 import net.minecraft.client.gui.toasts.GuiToast;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;

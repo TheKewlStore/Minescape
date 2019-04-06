@@ -1,6 +1,6 @@
 package com.iandavis.minescape.events;
 
-import com.iandavis.minescape.skills.ISkill;
+import com.iandavis.minescape.api.skills.ISkill;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.eventhandler.Event;
 

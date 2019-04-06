@@ -1,6 +1,7 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.api.skills;
 
-import com.iandavis.minescape.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.api.skills.SkillIcon;
+import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,12 +9,12 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Define the basic behaviors that all skills in the skill system will expose.
  * The basic approach to utilizing this is to define a class implementing this interface,
- * then register that class with the SkillCapability using the static function registerNewSkill.
+ * then register that class with the SkillContainer using the static function registerNewSkill.
  * You'll also want to leverage the LevelUpEvent, XPGainEvent and, if client side interaction is necessary,
  * the LevelUpMessage and XPGainMessage.
  *
  * An important note about custom skill instances, everything must be serializable around the currentXP set via
- * setXP(). This is due to how skill data is serialized via the SkillCapability instance,
+ * setXP(). This is due to how skill data is serialized via the SkillContainer instance,
  * which stores solely the xp values.
  */
 public interface ISkill {

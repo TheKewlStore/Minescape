@@ -1,6 +1,7 @@
-package com.iandavis.minescape.skills.capability;
+package com.iandavis.minescape.capability.skill;
 
-import com.iandavis.minescape.skills.ISkill;
+import com.iandavis.minescape.api.capability.ISkillContainer;
+import com.iandavis.minescape.api.skills.ISkill;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -9,13 +10,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class SkillStorage implements Capability.IStorage<ISkillCapability> {
+public class SkillStorage implements Capability.IStorage<ISkillContainer> {
     public SkillStorage() {
     }
 
     @Nullable
     @Override
-    public NBTBase writeNBT(Capability<ISkillCapability> capability, ISkillCapability instance, EnumFacing side) {
+    public NBTBase writeNBT(Capability<ISkillContainer> capability, ISkillContainer instance, EnumFacing side) {
         NBTTagCompound skillData = new NBTTagCompound();
 
         for (Map.Entry<String, ISkill> entry : instance.getAllSkills().entrySet()) {
@@ -26,7 +27,7 @@ public class SkillStorage implements Capability.IStorage<ISkillCapability> {
     }
 
     @Override
-    public void readNBT(Capability<ISkillCapability> capability, ISkillCapability instance, EnumFacing side, NBTBase nbt) {
+    public void readNBT(Capability<ISkillContainer> capability, ISkillContainer instance, EnumFacing side, NBTBase nbt) {
         if (!(nbt instanceof NBTTagCompound)) {
             return;
         }

@@ -1,14 +1,14 @@
-package com.iandavis.minescape.skills.capability;
+package com.iandavis.minescape.api.capability;
 
-import com.iandavis.minescape.skills.ISkill;
-import io.netty.buffer.ByteBuf;
+import com.iandavis.minescape.api.capability.ICommonCapability;
+import com.iandavis.minescape.api.skills.ISkill;
 
 import java.util.Map;
 
 /**
  * Implement the ability to store skill xp data on minecraft players.
  */
-public interface ISkillCapability {
+public interface ISkillContainer extends ICommonCapability {
     /**
      * Return all skill instances.
      * @return A map of the skill names to their instances.
@@ -29,8 +29,4 @@ public interface ISkillCapability {
     ISkill getSkill(String name);
 
     void setAllSkills(Map<String, ISkill> newSkills);
-
-    void serializePacket(ByteBuf buf);
-
-    void deserializePacket(ByteBuf buf);
 }

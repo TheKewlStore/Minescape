@@ -1,4 +1,4 @@
-package com.iandavis.minescape.skills.capes;
+package com.iandavis.minescape.api.skills.capes;
 
 import baubles.api.BaubleType;
 import net.minecraft.client.Minecraft;
@@ -72,7 +72,7 @@ public abstract class SkillCapeBauble extends Item implements baubles.api.IBaubl
         return false;
     }
 
-    abstract ResourceLocation getCapeTexture();
+    public abstract ResourceLocation getCapeTexture();
 
     @Override
     @SideOnly(Side.CLIENT)

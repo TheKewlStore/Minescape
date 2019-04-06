@@ -18,7 +18,10 @@ public class SkillEventHandler {
 
     @SubscribeEvent
     public static void onLevelUp(LevelUpEvent event) {
-        event.getPlayer().inventory.addItemStackToInventory(MinescapeItems.diggingSkillCape.getDefaultInstance());
+        if (event.getSkill().getLevel() >= event.getSkill().getMaxLevel()) {
+            event.getPlayer().inventory.addItemStackToInventory(MinescapeItems.diggingSkillCape.getDefaultInstance());
+        }
+
         CommonProxy.networkWrapper.sendTo(
                 new LevelUpMessage(
                         event.getSkill().getName(),

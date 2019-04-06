@@ -1,7 +1,9 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.gui.utils.Position;
-import com.iandavis.minescape.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.api.skills.ISkill;
+import com.iandavis.minescape.api.skills.SkillIcon;
+import com.iandavis.minescape.api.utils.Position;
+import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;

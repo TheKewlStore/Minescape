@@ -4,6 +4,7 @@ public enum MessageID {
     LevelUpMessage,
     XPGainMessage,
     LevelSetMessage,
+    NewWorldLoadedMessage,
     RareDropTableMessage,
     StatsRequestMessage,
     StatsResponseMessage

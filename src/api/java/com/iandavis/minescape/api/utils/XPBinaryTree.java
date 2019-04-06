@@ -1,4 +1,4 @@
-package com.iandavis.minescape.utils;
+package com.iandavis.minescape.api.utils;
 
 public class XPBinaryTree {
     private XPBinaryTreeNode root;

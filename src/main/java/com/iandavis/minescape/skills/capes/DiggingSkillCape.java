@@ -1,6 +1,7 @@
 package com.iandavis.minescape.skills.capes;
 
 import com.iandavis.minescape.MinescapeMain;
+import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.util.ResourceLocation;
 
@@ -14,7 +15,7 @@ public class DiggingSkillCape extends SkillCapeBauble {
     }
 
     @Override
-    ResourceLocation getCapeTexture() {
+    public ResourceLocation getCapeTexture() {
         return new ResourceLocation(MinescapeMain.MODID, "textures/entity/baubles/digging_skill_cape.png");
     }
 }

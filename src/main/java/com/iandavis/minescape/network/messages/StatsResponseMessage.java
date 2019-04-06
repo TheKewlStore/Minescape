@@ -1,22 +1,22 @@
 package com.iandavis.minescape.network.messages;
 
+import com.iandavis.minescape.capability.skill.SkillContainer;
 import com.iandavis.minescape.network.MessageID;
 import com.iandavis.minescape.network.handlers.StatsResponseHandler;
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.skills.capability.ISkillCapability;
-import com.iandavis.minescape.skills.capability.SkillCapability;
+import com.iandavis.minescape.api.capability.ISkillContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
 public class StatsResponseMessage implements IMessage {
-    private final ISkillCapability capability;
+    private final ISkillContainer capability;
 
     public StatsResponseMessage() {
-        capability = new SkillCapability();
+        capability = new SkillContainer();
     }
 
-    public StatsResponseMessage(ISkillCapability capability) {
+    public StatsResponseMessage(ISkillContainer capability) {
         this.capability = capability;
     }
 
@@ -36,7 +36,7 @@ public class StatsResponseMessage implements IMessage {
                 Side.CLIENT);
     }
 
-    public ISkillCapability getSkillCapability() {
+    public ISkillContainer getSkillCapability() {
         return capability;
     }
 

@@ -1,12 +1,13 @@
 package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
-import com.iandavis.minescape.gui.utils.Color;
-import com.iandavis.minescape.gui.utils.Position;
+import com.iandavis.minescape.api.utils.Color;
+import com.iandavis.minescape.api.utils.Position;
+import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.skills.ISkill;
-import com.iandavis.minescape.skills.capability.ISkillCapability;
-import com.iandavis.minescape.skills.SkillIcon;
+import com.iandavis.minescape.api.skills.ISkill;
+import com.iandavis.minescape.api.capability.ISkillContainer;
+import com.iandavis.minescape.api.skills.SkillIcon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;
@@ -78,10 +79,9 @@ public class SkillsTabScreen extends GuiScreen {
 
         Color white = new Color(255, 255, 255, 255);
 
-        ISkillCapability skillCapability = CommonProxy.getSkillCapability();
+        ISkillContainer skillCapability = ClientProxy.getSkillCapability();
 
-        if (CommonProxy.getSkillCapability() == null) {
-            CommonProxy.updateSkillCapability();
+        if (ClientProxy.getSkillCapability() == null) {
             super.drawCenteredString(this.mc.fontRenderer,
                     "Loading Player Stats",
                     this.guiLeft + 87,
@@ -216,7 +216,7 @@ public class SkillsTabScreen extends GuiScreen {
             int row = (int) ((mouseY - this.guiTop - 17) / 14.0f);
             int column = (int) ((mouseX - this.guiLeft - 7) / 53.0f);
             int skillIndex = (row * 3) + column;
-            ISkillCapability skillCapability = CommonProxy.getSkillCapability();
+            ISkillContainer skillCapability = ClientProxy.getSkillCapability();
 
             if (skillIndex > skillNameIndices.size() - 1) {
                 logger.warn(String.format("No Skill definition exists for skills page index %d", skillIndex));

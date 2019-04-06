@@ -1,7 +1,10 @@
-package com.iandavis.minescape.skills.capability;
+package com.iandavis.minescape.capability.skill;
 
-import com.iandavis.minescape.skills.ISkill;
+import com.iandavis.minescape.MinescapeMain;
+import com.iandavis.minescape.api.capability.ISkillContainer;
+import com.iandavis.minescape.api.skills.ISkill;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.ResourceLocation;
 
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -11,11 +14,11 @@ import java.util.Set;
 
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
-public class SkillCapability implements ISkillCapability {
+public class SkillContainer implements ISkillContainer {
     private final static Set<Class<? extends ISkill>> skillClasses = new HashSet<>();
     private final Map<String, ISkill> skills;
 
-    public SkillCapability() {
+    public SkillContainer() {
         skills = new HashMap<>();
 
         for (Class<? extends ISkill> skillClass: skillClasses) {
@@ -62,6 +65,11 @@ public class SkillCapability implements ISkillCapability {
             String skillName = buf.readCharSequence(lengthOfSkillName, Charset.defaultCharset()).toString();
             getSkill(skillName).deserializePacket(buf);
         }
+    }
+
+    @Override
+    public ResourceLocation getCapabilityID() {
+        return new ResourceLocation(MinescapeMain.MODID, "skills");
     }
 
     @Override
