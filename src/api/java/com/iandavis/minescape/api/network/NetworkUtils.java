@@ -1,4 +1,4 @@
-package com.iandavis.minescape.network;
+package com.iandavis.minescape.api.network;
 
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.api.skills.SkillIcon;
