@@ -3,7 +3,6 @@ package com.iandavis.minescape.gui;
 import com.iandavis.minescape.MinescapeMain;
 import com.iandavis.minescape.api.utils.Color;
 import com.iandavis.minescape.proxy.ClientProxy;
-import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.api.skills.ISkill;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

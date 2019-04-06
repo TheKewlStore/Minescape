@@ -4,7 +4,6 @@ import com.iandavis.minescape.MinescapeMain;
 import com.iandavis.minescape.api.utils.Color;
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.proxy.ClientProxy;
-import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.api.skills.ISkill;
 import com.iandavis.minescape.api.capability.ISkillContainer;
 import com.iandavis.minescape.api.skills.SkillIcon;

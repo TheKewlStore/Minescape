@@ -2,7 +2,6 @@ package com.iandavis.minescape.network.handlers;
 
 import com.iandavis.minescape.network.messages.LevelSetMessage;
 import com.iandavis.minescape.proxy.ClientProxy;
-import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.api.skills.ISkill;
 import com.iandavis.minescape.api.capability.ISkillContainer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

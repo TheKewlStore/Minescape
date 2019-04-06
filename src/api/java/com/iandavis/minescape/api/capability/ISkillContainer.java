@@ -1,6 +1,5 @@
 package com.iandavis.minescape.api.capability;
 
-import com.iandavis.minescape.api.capability.ICommonCapability;
 import com.iandavis.minescape.api.skills.ISkill;
 
 import java.util.Map;

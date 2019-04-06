@@ -1,11 +1,7 @@
 package com.iandavis.minescape.gui.toast;
 
 import net.minecraft.client.gui.toasts.GuiToast;
-import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-
-import javax.annotation.Nonnull;
 
 public class SimpleToastInterface extends TimedToastMessage {
     private final String title;
