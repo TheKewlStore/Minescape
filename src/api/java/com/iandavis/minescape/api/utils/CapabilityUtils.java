@@ -1,4 +1,4 @@
-package com.iandavis.minescape.capability;
+package com.iandavis.minescape.api.utils;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -10,5 +10,10 @@ public class CapabilityUtils {
     @Nullable
     public static <T> T getCapability(@Nullable final ICapabilityProvider provider, final Capability<T> capability, @Nullable final EnumFacing facing) {
         return provider != null && provider.hasCapability(capability, facing) ? provider.getCapability(capability, facing) : null;
+    }
+
+    @Nullable
+    public static <T> T getCapability(@Nullable final ICapabilityProvider provider, final Capability<T> capability) {
+        return getCapability(provider, capability, null);
     }
 }

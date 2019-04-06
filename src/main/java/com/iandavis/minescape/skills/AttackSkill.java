@@ -2,8 +2,10 @@ package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.api.skills.ISkill;
 import com.iandavis.minescape.api.skills.SkillIcon;
+import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -50,7 +52,7 @@ public class AttackSkill extends BasicSkill {
         }
 
         EntityPlayer player = (EntityPlayer) event.getSource().getTrueSource();
-        ISkill attackSkill = getCapabilityFromPlayer(player).getSkill("Attack");
+        ISkill attackSkill = CapabilityUtils.getCapability(player, CapabilitySkills.getSkillCapability(), null).getSkill("Attack");
 
         float skillLevelRatio = ((float) attackSkill.getLevel() / attackSkill.getMaxLevel());
 

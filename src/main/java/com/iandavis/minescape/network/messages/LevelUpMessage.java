@@ -1,7 +1,7 @@
 package com.iandavis.minescape.network.messages;
 
 import com.iandavis.minescape.network.MessageID;
-import com.iandavis.minescape.api.network.NetworkUtils;
+import com.iandavis.minescape.api.utils.NetworkUtils;
 import com.iandavis.minescape.network.handlers.LevelUpHandler;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.api.skills.SkillIcon;

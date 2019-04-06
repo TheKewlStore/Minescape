@@ -1,7 +1,7 @@
 package com.iandavis.minescape.capability.skill;
 
 import com.iandavis.minescape.api.capability.ISkillContainer;
-import com.iandavis.minescape.capability.CapabilityUtils;
+import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.capability.CommonCapabilityProvider;
 import com.iandavis.minescape.network.messages.StatsResponseMessage;
 import com.iandavis.minescape.proxy.CommonProxy;

@@ -1,6 +1,7 @@
 package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.api.skills.ISkill;
+import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import com.iandavis.minescape.api.events.LevelUpEvent;
 import com.iandavis.minescape.api.events.XPGainEvent;
@@ -132,26 +133,16 @@ public abstract class BasicSkill implements ISkill {
         currentXP = buf.readInt();
     }
 
-    public static ISkillContainer getCapabilityFromPlayer(EntityPlayer player) {
-        return player.getCapability(CapabilitySkills.getSkillCapability(), null);
-    }
-
-    public static ISkillContainer getCapabilityFromEvent(BlockEvent.BreakEvent event) {
-        return getCapabilityFromPlayer(event.getPlayer());
-    }
-
-    public static ISkillContainer getCapabilityFromEvent(PlayerEvent event) {
-        return getCapabilityFromPlayer(event.getEntityPlayer());
-    }
-
-    public static ISkillContainer getCapabilityFromEvent(net.minecraftforge.fml.common.gameevent.PlayerEvent event) {
-        return getCapabilityFromPlayer(event.player);
-    }
-
     @SubscribeEvent
     public static void onPlayerRespawn(PlayerEvent.Clone event) {
-        ISkillContainer oldCapability = getCapabilityFromPlayer(event.getOriginal());
-        ISkillContainer newCapability = getCapabilityFromEvent(event);
+        ISkillContainer oldCapability = CapabilityUtils.getCapability(
+                event.getOriginal(),
+                CapabilitySkills.getSkillCapability(),
+                null);
+        ISkillContainer newCapability = CapabilityUtils.getCapability(
+                event.getEntityPlayer(),
+                CapabilitySkills.getSkillCapability(),
+                null);
         newCapability.setAllSkills(oldCapability.getAllSkills());
     }
 }

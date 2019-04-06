@@ -1,7 +1,9 @@
 package com.iandavis.minescape.skills;
 
 import com.iandavis.minescape.api.skills.SkillIcon;
+import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.api.utils.Position;
+import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import com.iandavis.minescape.items.MinescapeItems;
 import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.proxy.CommonProxy;
@@ -113,7 +115,7 @@ public class DiggingSkill extends BasicSkill {
         DiggingSkill skill;
 
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-            skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
+            skill = (DiggingSkill) CapabilityUtils.getCapability(event.getEntityPlayer(), CapabilitySkills.getSkillCapability()).getSkill("Digging");
         } else {
             if (ClientProxy.getSkillCapability() == null) {
                 return;
@@ -151,7 +153,9 @@ public class DiggingSkill extends BasicSkill {
         }
 
         if (event.getState().getBlock() == Blocks.DIRT || event.getState().getBlock() == Blocks.GRASS) {
-            DiggingSkill skill = (DiggingSkill) getCapabilityFromEvent(event).getSkill("Digging");
+            DiggingSkill skill = (DiggingSkill) CapabilityUtils.getCapability(
+                    event.getPlayer(),
+                    CapabilitySkills.getSkillCapability()).getSkill("Digging");
 
             int xpEarned = skill.xpForBlock(event.getState().getBlock());
 
@@ -165,7 +169,9 @@ public class DiggingSkill extends BasicSkill {
             return;
         }
 
-        DiggingSkill skill = (DiggingSkill) getCapabilityFromPlayer(event.getHarvester()).getSkill("Digging");
+        DiggingSkill skill = (DiggingSkill) CapabilityUtils.getCapability(
+                event.getHarvester(),
+                CapabilitySkills.getSkillCapability()).getSkill("Digging");
         RareDropTable table = CommonProxy.getRareDropTable();
 
         if (table.shouldGetReward(skill.getRareDropChance(event.getHarvester().getHeldItem(EnumHand.MAIN_HAND).getItem()))) {

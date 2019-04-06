@@ -1,6 +1,7 @@
 package com.iandavis.minescape.api.skills.capes;
 
 import baubles.api.BaubleType;
+import com.iandavis.minescape.api.capability.ISkillContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelPlayer;
 import net.minecraft.client.model.ModelRenderer;
@@ -57,6 +58,7 @@ public abstract class SkillCapeBauble extends Item implements baubles.api.IBaubl
     @Override
     @Optional.Method(modid = "baubles")
     public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {
+
         return true;
     }
 
