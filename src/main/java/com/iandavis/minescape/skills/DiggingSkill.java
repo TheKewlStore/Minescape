@@ -1,5 +1,6 @@
 package com.iandavis.minescape.skills;
 
+import com.iandavis.minescape.api.skills.BasicSkill;
 import com.iandavis.minescape.api.skills.SkillIcon;
 import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.api.utils.Position;

@@ -56,6 +56,19 @@ public class CapabilitySkills {
                 (EntityPlayerMP) event.player);
     }
 
+    @SubscribeEvent
+    public static void onPlayerRespawn(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
+        ISkillContainer oldCapability = CapabilityUtils.getCapability(
+                event.getOriginal(),
+                CapabilitySkills.getSkillCapability(),
+                null);
+        ISkillContainer newCapability = CapabilityUtils.getCapability(
+                event.getEntityPlayer(),
+                CapabilitySkills.getSkillCapability(),
+                null);
+        newCapability.setAllSkills(oldCapability.getAllSkills());
+    }
+
     public static ISkillContainer getSkillContainer(ICapabilityProvider provider) {
         return CapabilityUtils.getCapability(provider, skillContainerCapability, null);
     }

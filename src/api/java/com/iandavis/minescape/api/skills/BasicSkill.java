@@ -1,17 +1,11 @@
-package com.iandavis.minescape.skills;
+package com.iandavis.minescape.api.skills;
 
-import com.iandavis.minescape.api.skills.ISkill;
-import com.iandavis.minescape.api.utils.CapabilityUtils;
-import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import com.iandavis.minescape.api.events.LevelUpEvent;
 import com.iandavis.minescape.api.events.XPGainEvent;
-import com.iandavis.minescape.api.capability.ISkillContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Simple Implementation of the ISkill interface which provides all the basic functionality required.
@@ -130,18 +124,5 @@ public abstract class BasicSkill implements ISkill {
     @Override
     public void deserializePacket(ByteBuf buf) {
         currentXP = buf.readInt();
-    }
-
-    @SubscribeEvent
-    public static void onPlayerRespawn(PlayerEvent.Clone event) {
-        ISkillContainer oldCapability = CapabilityUtils.getCapability(
-                event.getOriginal(),
-                CapabilitySkills.getSkillCapability(),
-                null);
-        ISkillContainer newCapability = CapabilityUtils.getCapability(
-                event.getEntityPlayer(),
-                CapabilitySkills.getSkillCapability(),
-                null);
-        newCapability.setAllSkills(oldCapability.getAllSkills());
     }
 }

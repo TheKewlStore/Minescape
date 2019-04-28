@@ -1,6 +1,5 @@
 package com.iandavis.minescape.api.skills;
 
-import com.iandavis.minescape.api.skills.SkillIcon;
 import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;

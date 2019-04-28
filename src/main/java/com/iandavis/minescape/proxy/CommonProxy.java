@@ -10,7 +10,7 @@ import com.iandavis.minescape.events.SkillEventHandler;
 import com.iandavis.minescape.items.RareDropTable;
 import com.iandavis.minescape.network.messages.*;
 import com.iandavis.minescape.skills.AttackSkill;
-import com.iandavis.minescape.skills.BasicSkill;
+import com.iandavis.minescape.api.skills.BasicSkill;
 import com.iandavis.minescape.skills.DiggingSkill;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
