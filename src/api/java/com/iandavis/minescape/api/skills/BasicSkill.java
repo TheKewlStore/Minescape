@@ -14,7 +14,7 @@ import net.minecraftforge.common.MinecraftForge;
 public abstract class BasicSkill implements ISkill {
     protected int currentXP;
 
-    protected int[] xpLevels = new int[]{
+    protected static int[] xpLevels = new int[]{
             0, 50, 101, 203, 356, 561, 818, 1127, 1487, 1900, 2365,
             2883, 3454, 4078, 4756, 5487, 6273, 7114, 8010, 8961, 9969,
             11033, 12154, 13333, 14571, 15868, 17225, 18644, 20124, 21667, 23274,
@@ -124,5 +124,9 @@ public abstract class BasicSkill implements ISkill {
     @Override
     public void deserializePacket(ByteBuf buf) {
         currentXP = buf.readInt();
+    }
+
+    public static int[] getXpLevels() {
+        return xpLevels;
     }
 }

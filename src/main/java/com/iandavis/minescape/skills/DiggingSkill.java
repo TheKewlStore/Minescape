@@ -1,17 +1,17 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.MinescapeConfig;
+import com.iandavis.minescape.api.MinescapeConfig;
 import com.iandavis.minescape.api.skills.BasicSkill;
 import com.iandavis.minescape.api.skills.SkillIcon;
+import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.capability.skill.CapabilitySkills;
+import com.iandavis.minescape.items.Drop;
 import com.iandavis.minescape.items.MinescapeItems;
+import com.iandavis.minescape.items.RareDropTable;
 import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.proxy.CommonProxy;
-import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
-import com.iandavis.minescape.items.Drop;
-import com.iandavis.minescape.items.RareDropTable;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -28,8 +28,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
 public class DiggingSkill extends BasicSkill {
-    private static boolean temporaryHardnessCheck = false;
-
     @Override
     public String getName() {
         return "Digging";
@@ -64,6 +62,10 @@ public class DiggingSkill extends BasicSkill {
     }
 
     private float getRareDropChance(Item heldItem) {
+        if (!MinescapeConfig.allowGlobalRareDropTables || !MinescapeConfig.diggingSkillCategory.enabled) {
+            return 0.0f;
+        }
+
         float toolBonus = 0.0f;
         float levelModifier = 0.05f * ((float) getLevel() / getMaxLevel());
 
@@ -104,13 +106,7 @@ public class DiggingSkill extends BasicSkill {
 
     @SubscribeEvent
     public static void determineBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (temporaryHardnessCheck) {
-            logger.info("Ignoring hardness check for now");
-            temporaryHardnessCheck = false;
-            return;
-        }
-
-        if (event.getEntityPlayer() == null) {
+        if (event.getEntityPlayer() == null || !MinescapeConfig.diggingSkillCategory.enabled) {
             return;
         }
 
@@ -150,7 +146,7 @@ public class DiggingSkill extends BasicSkill {
 
     @SubscribeEvent
     public static void onBreakEvent(BlockEvent.BreakEvent event) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT || !MinescapeConfig.diggingSkillCategory.enabled) {
             return;
         }
 
@@ -167,7 +163,7 @@ public class DiggingSkill extends BasicSkill {
 
     @SubscribeEvent
     public static void onHarvestEvent(BlockEvent.HarvestDropsEvent event) {
-        if (event.getHarvester() == null || !MinescapeConfig.allowGlobalRareDropTables) {
+        if (event.getHarvester() == null || !MinescapeConfig.allowGlobalRareDropTables || !MinescapeConfig.diggingSkillCategory.enabled) {
             return;
         }
 

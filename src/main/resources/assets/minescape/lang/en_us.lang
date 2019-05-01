@@ -1,2 +1,8 @@
-minescape.levelup=Leveled Up %s! Current level is: %d
+minescape.level_up=Leveled Up %s! Current level is: %d
+minescape.config.allow_global_drop_tables=Allow Rare Drop Tables (Globally)
+minescape.config.digging_subcategory=Digging Skill
+minescape.config.digging_subcategory.enabled=Enable the Digging skill for players
+minescape.config.digging_subcategory.allow_rare_drop_tables=Allow Rare Drop Tables for Digging
+minescape.config.digging_subcategory.xp_dirt=Base XP Awarded for breaking a dirt block
+minescape.config.digging_subcategory.xp_levels=XP Requirements for Digging Levels (including level 1, additive)
 item.digging_skill_cape.name=Digging Cape

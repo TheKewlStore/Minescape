@@ -1,5 +1,6 @@
 package com.iandavis.minescape;
 
+import com.iandavis.minescape.api.utils.Constants;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.proxy.Proxy;
 import net.minecraftforge.fml.common.Mod;
@@ -10,7 +11,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MinescapeMain.MODID, name = MinescapeMain.NAME, version = MinescapeMain.VERSION)
+@Mod(modid=Constants.MOD_ID, name=Constants.MOD_NAME, version=Constants.MOD_VERSION)
 public class MinescapeMain
 {
     public static final String MODID = "minescape";
