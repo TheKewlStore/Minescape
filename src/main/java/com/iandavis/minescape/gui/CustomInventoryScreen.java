@@ -1,6 +1,7 @@
 package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
+import com.iandavis.minescape.api.utils.Constants;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiButtonImage;
 import net.minecraft.client.gui.inventory.GuiInventory;
@@ -34,7 +35,7 @@ public class CustomInventoryScreen extends GuiInventory {
                 1, // tex x
                 168, // tex y
                 0, // hover tex y
-                new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png"));
+                new ResourceLocation(Constants.MOD_ID, "textures/gui/skills.png"));
 
         if (Loader.isModLoaded("inventorytweaks")) {
             logger.info("InventoryTweaks discovered, offsetting skills tab button by 5 pixels");

@@ -104,6 +104,6 @@ public class AttackSpeed implements IAttackSpeed {
 
     @Override
     public ResourceLocation getCapabilityID() {
-        return new ResourceLocation(MinescapeMain.MODID, "capability");
+        return new ResourceLocation(Constants.MOD_ID, "capability");
     }
 }

@@ -1,14 +1,16 @@
-package com.iandavis.minescape.api;
+package com.iandavis.minescape.api.config;
 
 import com.iandavis.minescape.api.skills.BasicSkill;
 import com.iandavis.minescape.api.utils.Constants;
 import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Stream;
 
+@Mod.EventBusSubscriber
 @Config(modid=Constants.MOD_ID)
 public class MinescapeConfig {
     @Config.LangKey("minescape.config.allow_global_drop_tables")
@@ -42,5 +44,17 @@ public class MinescapeConfig {
         @Config.Name("DiggingXPLevels")
         public String[] xpLevels = Arrays.stream(BasicSkill.getXpLevels()).boxed()
                 .map(String::valueOf).toArray(String[]::new);
+
+        public Integer[] getXpLevels() {
+            return Arrays.stream(xpLevels).map(Integer::parseInt).toArray(Integer[]::new);
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(OnConfigChangedEvent event) {
+        if (event.getModID().equals(Constants.MOD_ID)) {
+            ConfigManager.sync(Constants.MOD_ID, Config.Type.INSTANCE);
+        }
     }
 }
+

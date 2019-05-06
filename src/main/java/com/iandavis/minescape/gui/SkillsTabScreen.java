@@ -2,6 +2,7 @@ package com.iandavis.minescape.gui;
 
 import com.iandavis.minescape.MinescapeMain;
 import com.iandavis.minescape.api.utils.Color;
+import com.iandavis.minescape.api.utils.Constants;
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.api.skills.ISkill;
@@ -21,7 +22,7 @@ import java.util.List;
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
 public class SkillsTabScreen extends GuiScreen {
-    private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png");
+    private final ResourceLocation SKILLS_TEXTURE = new ResourceLocation(Constants.MOD_ID, "textures/gui/skills.png");
     private List<String> skillNameIndices = new ArrayList<>();
     private GuiButton backButton;
     private ISkill activeSkillDisplay = null;
@@ -58,7 +59,7 @@ public class SkillsTabScreen extends GuiScreen {
                 1, // tex x
                 168, // tex y
                 0, // hover tex y
-                new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png"));
+                new ResourceLocation(Constants.MOD_ID, "textures/gui/skills.png"));
 
         buttonList.add(backButton);
     }

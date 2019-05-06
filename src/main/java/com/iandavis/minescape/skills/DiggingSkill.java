@@ -1,6 +1,6 @@
 package com.iandavis.minescape.skills;
 
-import com.iandavis.minescape.api.MinescapeConfig;
+import com.iandavis.minescape.api.config.MinescapeConfig;
 import com.iandavis.minescape.api.skills.BasicSkill;
 import com.iandavis.minescape.api.skills.SkillIcon;
 import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;

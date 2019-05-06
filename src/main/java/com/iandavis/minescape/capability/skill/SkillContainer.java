@@ -3,6 +3,7 @@ package com.iandavis.minescape.capability.skill;
 import com.iandavis.minescape.MinescapeMain;
 import com.iandavis.minescape.api.capability.ISkillContainer;
 import com.iandavis.minescape.api.skills.ISkill;
+import com.iandavis.minescape.api.utils.Constants;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.ResourceLocation;
 
@@ -69,7 +70,7 @@ public class SkillContainer implements ISkillContainer {
 
     @Override
     public ResourceLocation getCapabilityID() {
-        return new ResourceLocation(MinescapeMain.MODID, "skills");
+        return new ResourceLocation(Constants.MOD_ID, "skills");
     }
 
     @Override

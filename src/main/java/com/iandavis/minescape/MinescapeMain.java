@@ -1,8 +1,10 @@
 package com.iandavis.minescape;
 
+import com.iandavis.minescape.api.config.MinescapeConfig;
 import com.iandavis.minescape.api.utils.Constants;
 import com.iandavis.minescape.proxy.CommonProxy;
 import com.iandavis.minescape.proxy.Proxy;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -11,13 +13,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid=Constants.MOD_ID, name=Constants.MOD_NAME, version=Constants.MOD_VERSION)
+@Mod(modid=Constants.MOD_ID, name=Constants.MOD_NAME, version=Constants.MOD_VERSION, guiFactory="com.iandavis.minescape.api.config.GuiConfigFactory")
 public class MinescapeMain
 {
-    public static final String MODID = "minescape";
-    public static final String NAME = "minescape";
-    public static final String VERSION = "0.1";
-
     @SidedProxy(
             clientSide="com.iandavis.minescape.proxy.CommonProxy",
             serverSide="com.iandavis.minescape.proxy.CommonProxy")
@@ -33,6 +31,7 @@ public class MinescapeMain
     {
         commonProxy.preInit(event);
         proxy.preInit(event);
+        MinecraftForge.EVENT_BUS.register(new MinescapeConfig());
     }
 
     @EventHandler

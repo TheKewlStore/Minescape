@@ -1,6 +1,7 @@
 package com.iandavis.minescape.proxy;
 
 import com.iandavis.minescape.MinescapeMain;
+import com.iandavis.minescape.api.utils.Constants;
 import com.iandavis.minescape.capability.attackspeed.CapabilityAttackSpeed;
 import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import com.iandavis.minescape.capability.skill.SkillContainer;
@@ -32,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 @Mod.EventBusSubscriber
 public class CommonProxy implements Proxy {
     public static Logger logger;
-    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MinescapeMain.MODID);
+    public static final SimpleNetworkWrapper networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Constants.MOD_ID);
     private static boolean registeredServer = false;
     private static RareDropTable rareDropTable;
 

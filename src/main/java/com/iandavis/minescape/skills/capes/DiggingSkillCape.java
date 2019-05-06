@@ -4,6 +4,7 @@ import com.iandavis.minescape.MinescapeMain;
 import com.iandavis.minescape.api.capability.ISkillContainer;
 import com.iandavis.minescape.api.skills.ISkill;
 import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.api.utils.Constants;
 import com.iandavis.minescape.proxy.ClientProxy;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,6 +34,6 @@ public class DiggingSkillCape extends SkillCapeBauble {
 
     @Override
     public ResourceLocation getCapeTexture() {
-        return new ResourceLocation(MinescapeMain.MODID, "textures/entity/baubles/digging_skill_cape.png");
+        return new ResourceLocation(Constants.MOD_ID, "textures/entity/baubles/digging_skill_cape.png");
     }
 }

@@ -1,9 +1,9 @@
 package com.iandavis.minescape.gui;
 
-import com.iandavis.minescape.MinescapeMain;
-import com.iandavis.minescape.api.utils.Color;
-import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.api.skills.ISkill;
+import com.iandavis.minescape.api.utils.Color;
+import com.iandavis.minescape.api.utils.Constants;
+import com.iandavis.minescape.proxy.ClientProxy;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber
 public class SkillBarHUD extends Gui {
-    private final ResourceLocation texture = new ResourceLocation(MinescapeMain.MODID, "textures/gui/skills.png");
+    private final ResourceLocation texture = new ResourceLocation(Constants.MOD_ID, "textures/gui/skills.png");
 
     public SkillBarHUD() {
     }
