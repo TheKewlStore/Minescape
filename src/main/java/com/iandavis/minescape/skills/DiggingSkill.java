@@ -183,11 +183,11 @@ public class DiggingSkill extends BasicSkill {
     }
 
     private boolean canBreakGravelColumns() {
-        return this.getLevel() > 75;
+        return this.getLevel() > 90;
     }
 
     private boolean canBreakSandColumns() {
-        return this.getLevel() > 50;
+        return this.getLevel() > 75;
     }
 
     private void checkBlockForChain(BlockPos blockPos, IBlockState blockState) {
