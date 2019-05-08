@@ -4,6 +4,7 @@ import com.iandavis.minescape.api.config.MinescapeConfig;
 import com.iandavis.minescape.api.skills.BasicSkill;
 import com.iandavis.minescape.api.skills.SkillIcon;
 import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
+import com.iandavis.minescape.api.utils.BlockUtils;
 import com.iandavis.minescape.api.utils.CapabilityUtils;
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.capability.skill.CapabilitySkills;
@@ -13,21 +14,118 @@ import com.iandavis.minescape.items.RareDropTable;
 import com.iandavis.minescape.proxy.ClientProxy;
 import com.iandavis.minescape.proxy.CommonProxy;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
 
 public class DiggingSkill extends BasicSkill {
+    private Set<BlockPos> blocksVisited = new HashSet<>();
+    private Set<BlockPos> blockChainToBreak = new HashSet<>();
+    private boolean ignoreBreakEvents = false;
+
+    @SubscribeEvent
+    public static void determineBreakSpeed(PlayerEvent.BreakSpeed event) {
+        if (event.getEntityPlayer() == null || !MinescapeConfig.diggingSkillCategory.enabled) {
+            return;
+        }
+
+        DiggingSkill skill;
+
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
+            skill = (DiggingSkill) CapabilityUtils.getCapability(event.getEntityPlayer(), CapabilitySkills.getSkillCapability()).getSkill("Digging");
+        } else {
+            if (ClientProxy.getSkillCapability() == null) {
+                return;
+            } else {
+                skill = (DiggingSkill) ClientProxy.getSkillCapability().getSkill("Digging");
+            }
+        }
+
+        if (!skill.isRelatedBlock(event.getState().getBlock())) {
+            return;
+        }
+
+        float newBreakSpeed = event.getOriginalSpeed() * skill.getDiggingSpeedModifier();
+
+        if (skill.getSkillCape().isEquipped(event.getEntityPlayer())) {
+            logger.info("Player that broke a block has the digging cape equipped!");
+            newBreakSpeed *= 10;
+        }
+
+        logger.debug(String.format(
+                "Original breaking speed is: %f",
+                event.getNewSpeed()));
+        logger.debug(String.format(
+                "Break speed at level %d will be set to: %f",
+                skill.getLevel(),
+                newBreakSpeed));
+
+        event.setNewSpeed(newBreakSpeed);
+    }
+
+    @SubscribeEvent
+    public static void onBreakEvent(BlockEvent.BreakEvent event) {
+        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT
+                || !MinescapeConfig.diggingSkillCategory.enabled) {
+            return;
+        }
+
+        DiggingSkill skill = (DiggingSkill) CapabilityUtils.getCapability(
+                event.getPlayer(),
+                CapabilitySkills.getSkillCapability()).getSkill("Digging");
+
+        if (skill.isRelatedBlock(event.getState().getBlock())) {
+            int xpEarned = skill.xpForBlock(event.getState().getBlock());
+            skill.gainXP(xpEarned, event.getPlayer());
+            skill.breakBlockChain(event);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onHarvestEvent(BlockEvent.HarvestDropsEvent event) {
+        if (event.getHarvester() == null || !MinescapeConfig.allowGlobalRareDropTables || !MinescapeConfig.diggingSkillCategory.enabled) {
+            return;
+        }
+
+        DiggingSkill skill = (DiggingSkill) CapabilityUtils.getCapability(
+                event.getHarvester(),
+                CapabilitySkills.getSkillCapability()).getSkill("Digging");
+        RareDropTable table = CommonProxy.getRareDropTable();
+
+        if (table.shouldGetReward(skill.getRareDropChance(event.getHarvester().getHeldItem(EnumHand.MAIN_HAND).getItem()))) {
+            Drop drop = table.getReward(event.getHarvester());
+            int quantity = drop.getQuantity();
+            int maxStackSize = drop.getItem().getDefaultInstance().getMaxStackSize();
+
+            while (quantity >= maxStackSize) {
+                event.getDrops().add(new ItemStack(drop.getItem(), maxStackSize));
+                quantity -= maxStackSize;
+            }
+
+            if (quantity > 0) {
+                event.getDrops().add(new ItemStack(drop.getItem(), quantity));
+            }
+        }
+    }
+
     @Override
     public String getName() {
         return "Digging";
@@ -84,6 +182,77 @@ public class DiggingSkill extends BasicSkill {
         return toolBonus + levelModifier;
     }
 
+    private boolean canBreakGravelColumns() {
+        return this.getLevel() > 75;
+    }
+
+    private boolean canBreakSandColumns() {
+        return this.getLevel() > 50;
+    }
+
+    private void checkBlockForChain(BlockPos blockPos, IBlockState blockState) {
+        Block block = blockState.getBlock();
+        blocksVisited.add(blockPos);
+
+        if (block != Blocks.SAND && block != Blocks.GRAVEL) {
+            return;
+        }
+
+        if (canBreakSandColumns() && block == Blocks.SAND) {
+            blockChainToBreak.add(blockPos);
+        }
+
+        if (canBreakGravelColumns() && block == Blocks.GRAVEL) {
+            blockChainToBreak.add(blockPos);
+        }
+
+        World world = Minecraft.getMinecraft().world;
+
+        if (!blocksVisited.contains(blockPos.up())) {
+            checkBlockForChain(blockPos.up(), world.getBlockState(blockPos.up()));
+        }
+
+        if (!blocksVisited.contains(blockPos.down())) {
+            checkBlockForChain(blockPos.down(), world.getBlockState(blockPos.down()));
+        }
+
+        if (!blocksVisited.contains(blockPos.east())) {
+            checkBlockForChain(blockPos.east(), world.getBlockState(blockPos.east()));
+        }
+
+        if (!blocksVisited.contains(blockPos.west())) {
+            checkBlockForChain(blockPos.west(), world.getBlockState(blockPos.west()));
+        }
+
+        if (!blocksVisited.contains(blockPos.north())) {
+            checkBlockForChain(blockPos.north(), world.getBlockState(blockPos.north()));
+        }
+
+        if (!blocksVisited.contains(blockPos.south())) {
+            checkBlockForChain(blockPos.south(), world.getBlockState(blockPos.south()));
+        }
+    }
+
+    private void breakBlockChain(BlockEvent.BreakEvent event) {
+        Block block = event.getState().getBlock();
+
+        if ((block != Blocks.SAND && block != Blocks.GRAVEL) || blockChainToBreak == null || ignoreBreakEvents) {
+            return;
+        }
+
+        checkBlockForChain(event.getPos(), event.getState());
+
+        ignoreBreakEvents = true;
+
+        for (BlockPos blockPos : blockChainToBreak) {
+            BlockUtils.simulateBlockBreak(blockPos, (EntityPlayerMP) event.getPlayer());
+        }
+
+        ignoreBreakEvents = false;
+        blocksVisited = new HashSet<>();
+        blockChainToBreak = new HashSet<>();
+    }
+
     private boolean isRelatedBlock(Block block) {
         return block == Blocks.DIRT || block == Blocks.GRASS || block == Blocks.SAND || block == Blocks.GRAVEL;
     }
@@ -102,89 +271,5 @@ public class DiggingSkill extends BasicSkill {
 
     private float getDiggingSpeedModifier() {
         return ((((float) getLevel() / getMaxLevel()) * 30.0f) / 10.0f) + 1.0f;
-    }
-
-    @SubscribeEvent
-    public static void determineBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (event.getEntityPlayer() == null || !MinescapeConfig.diggingSkillCategory.enabled) {
-            return;
-        }
-
-        DiggingSkill skill;
-
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER) {
-            skill = (DiggingSkill) CapabilityUtils.getCapability(event.getEntityPlayer(), CapabilitySkills.getSkillCapability()).getSkill("Digging");
-        } else {
-            if (ClientProxy.getSkillCapability() == null) {
-                return;
-            } else {
-                skill = (DiggingSkill) ClientProxy.getSkillCapability().getSkill("Digging");
-            }
-        }
-
-        if (!skill.isRelatedBlock(event.getState().getBlock())) {
-            return;
-        }
-
-        float newBreakSpeed = event.getOriginalSpeed() * skill.getDiggingSpeedModifier();
-
-        if (skill.getSkillCape().isEquipped(event.getEntityPlayer())) {
-            logger.info("Player that broke a block has the digging cape equipped!");
-            newBreakSpeed *= 10;
-        }
-
-        logger.debug(String.format(
-                "Original breaking speed is: %f",
-                event.getNewSpeed()));
-        logger.debug(String.format(
-                "Break speed at level %d will be set to: %f",
-                skill.getLevel(),
-                newBreakSpeed));
-
-        event.setNewSpeed(newBreakSpeed);
-    }
-
-    @SubscribeEvent
-    public static void onBreakEvent(BlockEvent.BreakEvent event) {
-        if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT || !MinescapeConfig.diggingSkillCategory.enabled) {
-            return;
-        }
-
-        if (event.getState().getBlock() == Blocks.DIRT || event.getState().getBlock() == Blocks.GRASS) {
-            DiggingSkill skill = (DiggingSkill) CapabilityUtils.getCapability(
-                    event.getPlayer(),
-                    CapabilitySkills.getSkillCapability()).getSkill("Digging");
-
-            int xpEarned = skill.xpForBlock(event.getState().getBlock());
-
-            skill.gainXP(xpEarned, event.getPlayer());
-        }
-    }
-
-    @SubscribeEvent
-    public static void onHarvestEvent(BlockEvent.HarvestDropsEvent event) {
-        if (event.getHarvester() == null || !MinescapeConfig.allowGlobalRareDropTables || !MinescapeConfig.diggingSkillCategory.enabled) {
-            return;
-        }
-
-        DiggingSkill skill = (DiggingSkill) CapabilityUtils.getCapability(
-                event.getHarvester(),
-                CapabilitySkills.getSkillCapability()).getSkill("Digging");
-        RareDropTable table = CommonProxy.getRareDropTable();
-
-        if (table.shouldGetReward(skill.getRareDropChance(event.getHarvester().getHeldItem(EnumHand.MAIN_HAND).getItem()))) {
-            Drop drop = table.getReward(event.getHarvester());
-            int quantity = drop.getQuantity();
-            int maxStackSize = drop.getItem().getDefaultInstance().getMaxStackSize();
-
-            while (quantity >= maxStackSize) {
-                event.getDrops().add(new ItemStack(drop.getItem(), maxStackSize));
-                quantity -= maxStackSize;
-            }
-
-            if (quantity > 0) {
-                event.getDrops().add(new ItemStack(drop.getItem(), quantity));
-            }
-        }
     }
 }

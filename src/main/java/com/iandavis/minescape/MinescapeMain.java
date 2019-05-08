@@ -13,7 +13,11 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid=Constants.MOD_ID, name=Constants.MOD_NAME, version=Constants.MOD_VERSION, guiFactory="com.iandavis.minescape.api.config.GuiConfigFactory")
+@Mod(
+        modid=Constants.MOD_ID,
+        name=Constants.MOD_NAME,
+        version=Constants.MOD_VERSION,
+        guiFactory="com.iandavis.minescape.api.config.GuiConfigFactory")
 public class MinescapeMain
 {
     @SidedProxy(
