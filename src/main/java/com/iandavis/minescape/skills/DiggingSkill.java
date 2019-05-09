@@ -6,6 +6,7 @@ import com.iandavis.minescape.api.skills.SkillIcon;
 import com.iandavis.minescape.api.skills.capes.SkillCapeBauble;
 import com.iandavis.minescape.api.utils.BlockUtils;
 import com.iandavis.minescape.api.utils.CapabilityUtils;
+import com.iandavis.minescape.api.utils.ItemUtils;
 import com.iandavis.minescape.api.utils.Position;
 import com.iandavis.minescape.capability.skill.CapabilitySkills;
 import com.iandavis.minescape.items.Drop;
@@ -32,6 +33,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import static com.iandavis.minescape.proxy.CommonProxy.logger;
@@ -40,6 +42,45 @@ public class DiggingSkill extends BasicSkill {
     private Set<BlockPos> blocksVisited = new HashSet<>();
     private Set<BlockPos> blockChainToBreak = new HashSet<>();
     private boolean ignoreBreakEvents = false;
+    private final Random randomGenerator = new Random(System.currentTimeMillis());
+
+    private Set<ItemStack> getRelatedTools() {
+        Set<ItemStack> relatedTools = new HashSet<>();
+
+        relatedTools.add(Items.WOODEN_SHOVEL.getDefaultInstance());
+        relatedTools.add(Items.STONE_SHOVEL.getDefaultInstance());
+        relatedTools.add(Items.IRON_SHOVEL.getDefaultInstance());
+        relatedTools.add(Items.GOLDEN_SHOVEL.getDefaultInstance());
+        relatedTools.add(Items.DIAMOND_SHOVEL.getDefaultInstance());
+
+        return relatedTools;
+    }
+
+    private Set<ItemStack> getUsableTools() {
+        Set<ItemStack> usableTools = new HashSet<>();
+
+        if (getLevel() >= 1) {
+            usableTools.add(Items.WOODEN_SHOVEL.getDefaultInstance());
+        }
+
+        if (getLevel() >= 15) {
+            usableTools.add(Items.STONE_SHOVEL.getDefaultInstance());
+        }
+
+        if (getLevel() >= 30) {
+            usableTools.add(Items.IRON_SHOVEL.getDefaultInstance());
+        }
+
+        if (getLevel() >= 60) {
+            usableTools.add(Items.GOLDEN_SHOVEL.getDefaultInstance());
+        }
+
+        if (getLevel() >= 80) {
+            usableTools.add(Items.DIAMOND_SHOVEL.getDefaultInstance());
+        }
+
+        return usableTools;
+    }
 
     @SubscribeEvent
     public static void determineBreakSpeed(PlayerEvent.BreakSpeed event) {
@@ -61,6 +102,19 @@ public class DiggingSkill extends BasicSkill {
 
         if (!skill.isRelatedBlock(event.getState().getBlock())) {
             return;
+        }
+
+        Set<ItemStack> relatedTools = skill.getRelatedTools();
+        Set<ItemStack> usableTools = skill.getUsableTools();
+
+        ItemStack mainHand = event.getEntityPlayer().getHeldItemMainhand();
+        ItemStack offHand = event.getEntityPlayer().getHeldItemOffhand();
+
+        if (ItemUtils.setContainsItemStack(mainHand, relatedTools) || ItemUtils.setContainsItemStack(offHand, relatedTools)) {
+            if (!ItemUtils.setContainsItemStack(mainHand, usableTools) && !ItemUtils.setContainsItemStack(offHand, usableTools)) {
+                event.setCanceled(true);
+                return;
+            }
         }
 
         float newBreakSpeed = event.getOriginalSpeed() * skill.getDiggingSpeedModifier();
@@ -96,7 +150,33 @@ public class DiggingSkill extends BasicSkill {
             int xpEarned = skill.xpForBlock(event.getState().getBlock());
             skill.gainXP(xpEarned, event.getPlayer());
             skill.breakBlockChain(event);
+
+            Set<ItemStack> usableTools = skill.getUsableTools();
+
+            ItemStack mainHand = event.getPlayer().getHeldItemMainhand();
+            ItemStack offHand = event.getPlayer().getHeldItemOffhand();
+
+            if (ItemUtils.setContainsItemStack(mainHand, usableTools)) {
+                skill.handleDurabilitySave(mainHand);
+            } else if (ItemUtils.setContainsItemStack(offHand, usableTools)) {
+                skill.handleDurabilitySave(offHand);
+            }
         }
+    }
+
+    private void handleDurabilitySave(ItemStack tool) {
+        float probabilityRoll = randomGenerator.nextFloat();
+        logger.info(String.format("Probability roll of saving tool durability: %f, required minimum: %f",
+                probabilityRoll, (1 - getDurabilitySavedChance())));
+
+        int toolDurability = tool.getItemDamage();
+
+        if (probabilityRoll > (1 - getDurabilitySavedChance())) {
+            logger.info("Saving durability on tool");
+            tool.setItemDamage(tool.getItemDamage() - 1);
+        }
+
+        logger.info(String.format("Tool durability before: %d and after: %d", toolDurability, tool.getItemDamage()));
     }
 
     @SubscribeEvent
@@ -157,6 +237,10 @@ public class DiggingSkill extends BasicSkill {
     @Override
     public SkillCapeBauble getSkillCape() {
         return MinescapeItems.diggingSkillCape;
+    }
+
+    private float getDurabilitySavedChance() {
+        return 0.5f * ((float) getLevel() / getMaxLevel());
     }
 
     private float getRareDropChance(Item heldItem) {
