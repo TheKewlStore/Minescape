@@ -38,7 +38,23 @@ public class RareDropToast extends TimedToastMessage {
         toastGui.getMinecraft().fontRenderer.drawString(message, 30, 18, -16777216);
 
         RenderHelper.enableGUIStandardItemLighting();
-        toastGui.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(Item.getByNameOrId(itemTexture.toString()).getDefaultInstance(), 8, 8);
+        toastGui.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(
+                Item.getByNameOrId(itemTexture.toString()).getDefaultInstance(), 8, 8);
+    }
 
+    public ResourceLocation getItemTexture() {
+        return itemTexture;
+    }
+
+    public void setItemTexture(ResourceLocation itemTexture) {
+        this.itemTexture = itemTexture;
+    }
+
+    public void incrementQuantity(int quantity) {
+        this.quantity += quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
